@@ -1,0 +1,25 @@
+*.iml
+.gitigore
+out/*
+.idea/**
+**/.idea/**
+logs/*
+log/*
+_thumbs
+_thumbs/*
+*/target/*
+*/logs/*
+*.log
+*.lck
+*.epoch
+**/idea/**
+hs_err_pid*.*
+replay_pid*.*
+
+# mac
+*.project
+.settings/
+.classpath
+.factorypath
+.vscode
+.DS_Store
