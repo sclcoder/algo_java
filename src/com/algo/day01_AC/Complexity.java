@@ -50,6 +50,43 @@ public class Complexity {
 }
 
 /**
+ * 最常用快捷键
+ *
+ * sout 输出语句
+ * psvm 输出main方法
+ * fori 输出for语句
+ * iter 输出foreach语句
+ *
+ * Ctrl+Shift+U 大小写转换
+ * Ctrl+Shift+N   可以快速打开文件
+ * Ctrl+Shift+T 生成测试用例
+ * Ctrl+Shift+Enter 补全一切符号
+ * Alt+Shift+Up and Alt+Shift+Down   上下移动当前行
+ *
+ * Ctrl+Alt+B 查看抽象方法的实现
+ * Ctrl+Alt+Space   类名提示
+ * Ctrl+Alt+L   格式化代码
+ * Ctrl+Alt+O  优化导包
+ *
+ * Ctrl+E   显示最近编辑的文件列表
+ * Ctrl+F12 显示当前文件的结构
+ * Ctrl+P	 显示参数信息
+ * Ctrl+Y   删除整行
+ * Ctrl+O   重写父类的方法
+ * Ctrl+I   重写接口的方法
+ * Ctrl+D   复制当前行
+ * Ctrl+H   查看类的继承体系
+ * Ctrl+N   可以快速打开类
+ *
+ *
+ * Alt+句点 代码提示
+ * Alt+Enter 智能修复,如导包,生成局部变量
+ * Alt+Insert   生成构造器/Getter/Setter等
+ *
+ * Shift double 快速查找类/文件
+ *
+ *
+ *
  * Mac中IDEA常用快捷键
  *
  * sout 输出语句
@@ -58,6 +95,8 @@ public class Complexity {
  * iter 输出foreach语句
  *
  * Control + Option + O 优化import
+ * Control + 回车 快速生成getter、setter、toString等
+ * Command + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）
  *
  * Control + Space 基本的代码补全（补全任何类、方法、变量）
  * Control + Shift + Space 智能代码补全（过滤器方法列表和变量的预期类型）
@@ -156,7 +195,6 @@ public class Complexity {
  * Command + U 前往当前光标所在方法的父类的方法 / 接口定义
  * Control + 方向键下 / Control + 方向键上 当前光标跳转到当前文件的前一个/后一个方法名位置
  * Command + ] / Command + [ 移动光标到当前所在代码的花括号开始/结束位置
- * Command + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）
  * Control + H 显示当前类的层次结构
  * Command + Shift + H 显示方法层次结构
  * Control + Option + H 显示调用层次结构
