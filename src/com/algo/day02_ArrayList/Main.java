@@ -26,9 +26,11 @@ public class Main {
 
         list1.add(new Person(20,"Jack"));
         list1.add(new Person(21,"Rock"));
-        list1.add(null);
         list1.add(new Person(22,"Joan"));
-        list1.remove(list1.size()-1);
+//        list1.remove(1);
+        list1.clear();
+        // 强制垃圾回收
+        System.gc();
         System.out.println(list1.indexOf(null));
 
         System.out.println(list1);

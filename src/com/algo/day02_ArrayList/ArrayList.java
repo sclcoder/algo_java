@@ -159,7 +159,8 @@ public class ArrayList<T> {
         for (int i = index + 1; i < size; i++) {
             elements[i-1] = elements[i];
         }
-        size -= 1;
+        // 最后一个位置将指针清空不然会有内存泄漏
+        elements[--size] = null;
         return old;
     }
 
