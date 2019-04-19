@@ -96,6 +96,9 @@ public class Complexity {
  *
  * Control + Option + O 优化import
  * Control + 回车 快速生成getter、setter、toString等
+ * Control + O 覆盖方法（重写父类方法）
+ * Control + I 实现方法（实现接口中的方法）
+ * Command + N, Control + Enter, Control + N 生成代码（getter、setter、构造函数、hashCode/equals,toString）
  * Command + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）
  *
  * Control + Space 基本的代码补全（补全任何类、方法、变量）
@@ -106,9 +109,6 @@ public class Complexity {
  * Shift + F1 查看外部文档（在某些代码上会触发打开浏览器显示相关文档）
  * Command + 鼠标放在代码上 显示代码简要信息
  * Command + F1 在错误或警告处显示具体描述信息
- * Command + N, Control + Enter, Control + N 生成代码（getter、setter、构造函数、hashCode/equals,toString）
- * Control + O 覆盖方法（重写父类方法）
- * Control + I 实现方法（实现接口中的方法）
  * Command + Option + T 包围代码（使用if..else, try..catch, for, synchronized等包围选中的代码）
  * Command + / 注释/取消注释与行注释
  * Command + Option + / 注释/取消注释与块注释

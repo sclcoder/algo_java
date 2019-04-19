@@ -9,10 +9,10 @@ public class Main {
         linkedList.add(3);
         linkedList.add(linkedList.size(),600);
         linkedList.add(4);
-        linkedList.remove(2);
-        linkedList.add(4,20);
-        linkedList.remove(0);
-        linkedList.remove(linkedList.size()-1);
+//        linkedList.remove(2);
+//        linkedList.add(4,20);
+//        linkedList.remove(0);
+//        linkedList.remove(linkedList.size()-1);
         System.out.println(linkedList);
         System.out.println(linkedList.get(2));
 

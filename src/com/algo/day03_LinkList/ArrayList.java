@@ -2,11 +2,7 @@ package com.algo.day03_LinkList;
 
 @SuppressWarnings("unchecked")
 
-public class ArrayList<T> {
-    /**
-     * 元素的数量
-     */
-    private int size;
+public class ArrayList<T> extends AbstractList<T> {
 
     /**
      * 所有的元素i
@@ -14,7 +10,6 @@ public class ArrayList<T> {
     private T[] elements;
 
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ELEMENT_NOT_FOUND = -1;
 
     /**
      * 带参数的构造函数
@@ -37,6 +32,7 @@ public class ArrayList<T> {
     /**
      * 清除所有元素
      */
+    @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
            elements[i] = null;
@@ -44,43 +40,6 @@ public class ArrayList<T> {
         size = 0;
     }
 
-    /**
-     * 元素的数量
-     *
-     * @return
-     */
-    public int size() {
-        return size;
-    }
-
-    /**
-     * 是否为空
-     *
-     * @return
-     */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-
-    /**
-     * 是否包含某个元素
-     *
-     * @param element
-     * @return
-     */
-    public boolean contains(T element) {
-        return indexOf(element) != ELEMENT_NOT_FOUND;
-    }
-
-    /**
-     * 添加元素到尾部
-     *
-     * @param element
-     */
-    public void add(T element) {
-        add(size, element);
-    }
 
     /**
      * 获取index位置的元素
@@ -88,6 +47,7 @@ public class ArrayList<T> {
      * @param index
      * @return
      */
+    @Override
     public T get(int index) {
         rangeCheck(index);
         return elements[index];
@@ -100,6 +60,7 @@ public class ArrayList<T> {
      * @param element
      * @return 原来的元素ֵ
      */
+    @Override
     public T set(int index, T element) {
         rangeCheck(index);
         T old = elements[index];
@@ -113,8 +74,8 @@ public class ArrayList<T> {
      * @param index
      * @param element
      */
+    @Override
     public void add(int index, T element) {
-
         addRangeCheck(index);
         // 检查是否需要扩容
         ensureCapacity(size+1);
@@ -144,6 +105,7 @@ public class ArrayList<T> {
      * @param index
      * @return
      */
+    @Override
     public T remove(int index) {
         rangeCheck(index);
         T old = elements[index];
@@ -171,6 +133,7 @@ public class ArrayList<T> {
      * @param element
      * @return
      */
+    @Override
     public int indexOf(T element) {
         // 传入的元素都是对象
         if (element == null){
@@ -213,24 +176,7 @@ public class ArrayList<T> {
         }
     }
 
-    /**
-     * 边界条件检查
-     */
-    private void rangeCheck(int index){
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
-        }
-    }
 
-    /**
-     * 添加元素边界检查
-     * @param index
-     */
-    private  void addRangeCheck(int index){
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
-        }
-    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

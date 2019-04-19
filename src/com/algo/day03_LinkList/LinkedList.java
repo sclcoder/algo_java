@@ -1,9 +1,8 @@
 package com.algo.day03_LinkList;
 
-public class LinkedList<T> {
-    private int size;
-    private Node<T> first;
+public class LinkedList<T> extends AbstractList<T>{
 
+    private Node<T> first;
     // 节点结构（内部类）
     private static class Node<T> {
         T element;
@@ -15,52 +14,14 @@ public class LinkedList<T> {
         }
     }
 
-    private static final int ELEMENT_NOT_FOUND = -1;
 
     /**
      * 清除所有元素
      */
+    @Override
     public void clear() {
         first = null;
         size = 0;
-    }
-
-    /**
-     * 元素的数量
-     *
-     * @return
-     */
-    public int size() {
-        return size;
-    }
-
-    /**
-     * 是否为空
-     *
-     * @return
-     */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-
-    /**
-     * 是否包含某个元素
-     *
-     * @param element
-     * @return
-     */
-    public boolean contains(T element) {
-        return indexOf(element) == ELEMENT_NOT_FOUND;
-    }
-
-    /**
-     * 添加元素到尾部
-     *
-     * @param element
-     */
-    public void add(T element) {
-        add(size, element);
     }
 
     /**
@@ -69,6 +30,7 @@ public class LinkedList<T> {
      * @param index
      * @return
      */
+    @Override
     public T get(int index) {
         Node<T> node = node(index);
         return node.element;
@@ -81,6 +43,7 @@ public class LinkedList<T> {
      * @param element 值
      * @return 原来的元素ֵ
      */
+    @Override
     public T set(int index, T element) {
         Node<T> node = node(index);
         T old = node.element;
@@ -94,6 +57,7 @@ public class LinkedList<T> {
      * @param index   要插入的位置
      * @param element 要插入的值
      */
+    @Override
     public void add(int index, T element) {
         if (index == 0) {
             first = new Node<>(element,first);
@@ -110,6 +74,7 @@ public class LinkedList<T> {
      * @param index
      * @return
      */
+    @Override
     public T remove(int index) {
         rangeCheck(index);
         Node<T> node;
@@ -131,6 +96,7 @@ public class LinkedList<T> {
      * @param element 值
      * @return 索引值
      */
+    @Override
     public int indexOf(T element) {
         if (element == null) {
             Node<T> node = first;
@@ -169,14 +135,6 @@ public class LinkedList<T> {
         return node;
     }
 
-    /**
-     * 边界条件检查
-     */
-    private void rangeCheck(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
-        }
-    }
 
 
     @Override
