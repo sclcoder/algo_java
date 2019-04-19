@@ -100,7 +100,8 @@ public class Complexity {
  * Control + I 实现方法（实现接口中的方法）
  * Command + N, Control + Enter, Control + N 生成代码（getter、setter、构造函数、hashCode/equals,toString）
  * Command + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）
- *
+ * Command + Option + L   格式化代码
+
  * Control + Space 基本的代码补全（补全任何类、方法、变量）
  * Control + Shift + Space 智能代码补全（过滤器方法列表和变量的预期类型）
  * Command + Shift + Enter 自动结束代码，行末自动添加分号
