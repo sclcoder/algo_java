@@ -121,6 +121,7 @@ public class ArrayList<T> {
         /**
          * 方法1: 变量i代表要移动元素位置的下一个位置
          * 所以判断条件是 i=size i>index, 因为是要移动元素的下一个位置
+         * 这种方式更好 因为条件判断中比方式2少了size-1操作
          */
 //        for (int i = size; i > index; i--) {
 //            elements[i] = elements[i-1];
@@ -171,12 +172,24 @@ public class ArrayList<T> {
      * @return
      */
     public int indexOf(T element) {
-
-        for (int i = 0; i < size; i++) {
-            if (element == elements[i]) {
-                return i;
+        // 传入的元素都是对象
+        if (element == null){
+            for (int i = 0; i < size; i++) {
+                if (elements[i]==null)return i;
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                // 仅仅比较内存地址太局限了
+//            if (element == elements[i]) {
+//                return i;
+//            }
+                // 允许外部自定义比较规则 使用equals函数
+                if (element.equals(elements[i])){
+                    return i;
+                }
             }
         }
+
         return ELEMENT_NOT_FOUND;
     }
 
