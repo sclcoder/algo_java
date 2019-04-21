@@ -50,10 +50,10 @@ public class _234_回文链表 {
                 head = slow;
             } else { // 奇数个节点
                 slow = slow.next;
+                fast = fast.next;
                 // 遍历时顺便翻转前半部分
                 head.next = temp; // 翻转代码
                 head = slow;
-                break;
             }
 
         }
@@ -65,9 +65,11 @@ public class _234_回文链表 {
         return true;
     }
 
-    /** 高票解法 : 其优点在于处理奇数偶数方面寻找中间节点方式很好
+    /** 高票解法C++
+     *
+     * 其一，find mid node 使用快慢指针找到链表中点。 其二，reverse 逆序后半部分。 其三，check 从头、终点，开始比较是否相同。
      * bool isPalindrome(ListNode* head) {//O(n)、O(1)
-     *     ListNode* slow = head, *fast = head,  *prev = nullptr;
+     *     ListNode* slow = head, *fast = head,  *prev = null;
      *     while (fast){//find mid node
      *         slow = slow->next;
      *         fast = fast->next ? fast->next->next: fast->next;

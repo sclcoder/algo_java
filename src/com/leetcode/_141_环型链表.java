@@ -22,6 +22,7 @@ public class _141_环型链表 {
      *  1.快指针在环中落后慢指针1步,那么下一次循环两者肯定相遇
      *  2.快指针在环中落后慢指针2步,那么下一次肯定落后慢指针1步,回到情况1
      *  综上若有环两者一定相遇
+     *  证明: fast和slow相差n步  一次循环 n = n+1-2 所以n肯定可以为0 说明可以相遇
      */
     public boolean hasCycle(ListNode head) {
         if (head == null || head.next == null) return false;
