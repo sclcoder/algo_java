@@ -14,6 +14,8 @@ package com.leetcode;
  * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
  */
 
+import com.algo.day03_LinkList.List;
+
 /**
  * 之前看过此题的思路：利用快慢指针
  *
@@ -29,6 +31,7 @@ public class _234_回文链表 {
 
     /**
      * 在处理奇数、偶数个节点上还不够优雅，应该有改进方法
+     * 好像翻转后半部分就不需要考虑奇数、偶数问题
      */
     public boolean isPalindrome(ListNode head) {
         if (head == null || head.next == null) return true; // 只有一个节点肯定是true
@@ -60,6 +63,48 @@ public class _234_回文链表 {
         while (temp != null){
             if (temp.val != head.val) return false;
             temp = temp.next;
+            head = head.next;
+        }
+        return true;
+    }
+
+    public boolean isPalindrome2(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        ListNode prev = null;
+        /** 查找中间位置
+         * 条件 fast != null && fast.next != null
+         * 奇数  1 2 3 4 5
+         * slow     3      slow定位到3
+         * 偶数  1 2 3 4 5 6
+         * slow       4    slow定位到4
+         */
+        while (fast != null && fast.next != null){
+                slow = slow.next;
+                fast = fast.next.next;
+        }
+
+        /** 翻转右半边
+         * 奇数  1 2 3 2 1
+         * 左边 1->2->3->null  右边 5->4->3->null
+         * 偶数  1 2 3 4 5 6
+         * 左边 1->2->3->4->null  右边 6->5->4->null
+         *
+         * 偶数  1 2 3 3 2 1  是回文字符
+         * 左边 1->2->3->3->null  右边 1->2->3->null
+         */
+        while (slow != null){
+            ListNode tail = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = tail;
+        }
+        /** 检查是否为回文字符
+         *  有其一是null就说明比较完了,可以确定是回文字符了
+         */
+        while (prev != null && head != null){
+            if (prev.val != head.val) return false;
+            prev = prev.next;
             head = head.next;
         }
         return true;
