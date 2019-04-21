@@ -27,7 +27,7 @@ public class _206_反转链表 {
     public ListNode reverseList1(ListNode head) {
         ListNode newNode = null;
         /**
-         * 注意便捷条件: head = null 才到达最后一个节点的next指针
+         * 注意边界条件: head = null 才到达最后一个节点的next指针
          */
         while (head != null) {
             ListNode temp = head.next;
