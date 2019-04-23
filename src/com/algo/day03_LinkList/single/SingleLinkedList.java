@@ -1,44 +1,18 @@
-package com.algo.day03_LinkList;
+package com.algo.day03_LinkList.single;
 
-/**
- * 双向链表的实现
- *
- * @param <T>
- */
-public class LinkedList<T> extends AbstractList<T> {
+import com.algo.day03_LinkList.AbstractList;
+
+public class SingleLinkedList<T> extends AbstractList<T> {
 
     private Node<T> first;
-    private Node<T> last;
-
     // 节点结构（内部类）
     private static class Node<T> {
         T element;
-        Node<T> prev;
         Node<T> next;
-
         // 构造函数
-        public Node(Node<T> prev, T element, Node<T> next) {
+        public Node(T element, Node<T> next) {
             this.element = element;
-            this.prev = prev;
             this.next = next;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            if (prev != null){
-                sb.append(prev.element);
-            } else {
-                sb.append("null");
-            }
-            sb.append("<-").append(element).append("->");
-            if (next != null){
-                sb.append(next.element);
-            } else {
-                sb.append("null");
-            }
-
-            return sb.toString();
         }
     }
 
@@ -49,7 +23,6 @@ public class LinkedList<T> extends AbstractList<T> {
     @Override
     public void clear() {
         first = null;
-        last = null;
         size = 0;
     }
 
@@ -89,26 +62,11 @@ public class LinkedList<T> extends AbstractList<T> {
     @Override
     public void add(int index, T element) {
         addRangeCheck(index);
-
-        if (index == size) { // 向最后添加元素
-            Node<T> node = last;
-            Node<T> newNode = new Node<>(node, element, null);
-            if (node == null) { // index==0 size==0 第一个元素
-                first = newNode;
-            } else {
-                node.next = newNode;
-            }
-            last = newNode;
+        if (index == 0) {
+            first = new Node<>(element,first);
         } else {
-            Node<T> node = node(index);
-            Node<T> newNode = new Node<>(node.prev, element, node);
-            if (node.prev != null) {
-                node.prev.next = newNode;
-            } else { // index = 0
-                first = newNode;
-            }
-            node.prev = newNode;
-
+            Node<T> prev = node(index -1);
+            prev.next = new Node<>(element,prev.next);
         }
         size++;
     }
@@ -122,23 +80,17 @@ public class LinkedList<T> extends AbstractList<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        Node<T> targetNode = node(index);
-        Node<T> prevNode = targetNode.prev;
-        Node<T> nextNode = targetNode.next;
-
-        if (prevNode == null) { // index == 0
-            first = nextNode;
+        Node<T> node;
+        if (index == 0){
+            node = first;
+            first = first.next;
         } else {
-            prevNode.next = nextNode;
-        }
-
-        if (nextNode == null) { // index == size-1
-            last = prevNode;
-        } else {
-            nextNode.prev = prevNode;
+            Node<T> prev = node(index-1);
+            node = prev.next;
+            prev.next = node.next;
         }
         size--;
-        return targetNode.element;
+        return node.element;
     }
 
     /**
@@ -176,37 +128,28 @@ public class LinkedList<T> extends AbstractList<T> {
      */
     public Node<T> node(int index) {
         rangeCheck(index);
-
-        if (index < (size >> 1)) { // 从前边开始查找
-            /**
-             * 注意边界: next的次数和index的值是一致的
-             */
-            Node<T> node = first;
-            for (int i = 0; i < index; i++) {
-                node = node.next;
-            }
-            return node;
-
-        } else { // 从后面开始查找
-            Node<T> node = last;
-            for (int i = size - 1; i > index; i--) {
-                node = node.prev;
-            }
-            return node;
+        Node<T> node = first;
+        /**
+         * 注意边界: next的次数和index的值是一致的
+         */
+        for (int i = 0; i < index; i++) {
+            node = node.next;
         }
+        return node;
     }
+
 
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("LinkedList{size=").append(size).append(", elements=[");
+        sb.append("SingleLinkedList{size=").append(size).append(", elements=[");
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i != 0) {
                 sb.append(",");
             }
-            sb.append(node);
+            sb.append(node.element);
             node = node.next;
         }
         sb.append("]}");

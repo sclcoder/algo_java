@@ -98,7 +98,7 @@ public class Complexity {
  * Control + 回车 快速生成getter、setter、toString等
  * Control + O 覆盖方法（重写父类方法）
  * Control + I 实现方法（实现接口中的方法）
- * Command + N, Control + Enter, Control + N 生成代码（getter、setter、构造函数、hashCode/equals,toString）
+ * Command + N, Control + Enter 生成代码（getter、setter、构造函数、hashCode/equals,toString）
  * Command + F12 弹出当前文件结构层，可以在弹出的层上直接输入进行筛选（可用于搜索类中的方法）
  * Command + Option + L   格式化代码
 

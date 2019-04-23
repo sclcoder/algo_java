@@ -6,6 +6,9 @@ package com.algo.day03_LinkList;
  * @param <T>
  */
 public interface List<T> {
+
+    public static final int ELEMENT_NOT_FOUND = -1;
+
     /**
      * 清除所有元素
      */

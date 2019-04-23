@@ -8,8 +8,6 @@ public abstract class AbstractList<T> implements List<T> {
      */
 
     protected int size;
-
-    protected static final int ELEMENT_NOT_FOUND = -1;
     /**
      * 元素的数量
      *
