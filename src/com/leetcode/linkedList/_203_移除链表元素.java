@@ -1,4 +1,4 @@
-package com.leetcode;
+package com.leetcode.linkedList;
 
 /** https://leetcode-cn.com/problems/remove-linked-list-elements/
  * 删除链表中等于给定值 val 的所有节点。

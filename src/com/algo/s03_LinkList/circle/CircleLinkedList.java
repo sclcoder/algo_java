@@ -11,7 +11,7 @@ public class CircleLinkedList<T> extends AbstractList<T> {
 
     private Node<T> first;
     private Node<T> last;
-
+    private Node<T> current;
     // 节点结构（内部类）
     private static class Node<T> {
         T element;
@@ -43,7 +43,38 @@ public class CircleLinkedList<T> extends AbstractList<T> {
             return sb.toString();
         }
     }
+/***************解决约思夫问题提供的接口**************************************/
+    /**
+     * 重置
+     */
+    public void reset(){
+        current = first;
+    }
 
+    /**
+     * 移除current指向的节点
+     * @return
+     */
+    public T remove(){
+        if (current == null) return null;
+        Node<T> nextNode = current.next;
+        T element = remove(current);
+        if (size == 0){ // 如果删除了唯一的节点 current重置为null
+            current = null;
+        } else {
+            current = nextNode;
+        }
+        return element;
+    }
+    /**
+     * 下一个
+     */
+    public T next(){
+        if (current == null) return null;
+        current = current.next;
+        return current.element;
+    }
+/********************************************/
 
     /**
      * 清除所有元素
@@ -218,7 +249,7 @@ public class CircleLinkedList<T> extends AbstractList<T> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("LinkedList{size=").append(size).append(", elements=[");
+        sb.append("CircleLinkedList{size=").append(size).append(", elements=[");
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i != 0) {
