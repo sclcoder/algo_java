@@ -106,7 +106,7 @@ public class SingleLinkedList2<T> extends AbstractList<T> {
     @Override
     public int indexOf(T element) {
         if (element == null) {
-            Node<T> node = first;
+            Node<T> node = first.next;
             for (int i = 0; i < size; i++) {
                 if (node.element == element) {
                     return i;
@@ -115,7 +115,7 @@ public class SingleLinkedList2<T> extends AbstractList<T> {
                 }
             }
         } else {
-            Node<T> node = first;
+            Node<T> node = first.next;
             for (int i = 0; i < size; i++) {
                 if (node.element.equals(element)) return i;
                 node = node.next;
