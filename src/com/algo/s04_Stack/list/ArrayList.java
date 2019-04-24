@@ -19,7 +19,7 @@ public class ArrayList<T> extends AbstractList<T> {
     public ArrayList(int capacity) {
         capacity = (capacity < DEFAULT_CAPACITY) ? DEFAULT_CAPACITY : capacity;
 //        elements = new T[capacity]; 报错
-        elements = (T[]) new Object[capacity]; // 使用Object然后强转
+        elements = (T[]) new Integer [capacity]; // 使用Object然后强转
     }
 
     /**

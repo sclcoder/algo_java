@@ -8,7 +8,7 @@ import com.algo.s04_Stack.list.List;
  */
 public class Stack<T> {
 
-    private List<T> list = new ArrayList<>();
+    private ArrayList<T> list = new ArrayList<>();
 
     public int size(){
         return list.size();
