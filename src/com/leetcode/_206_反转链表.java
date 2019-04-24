@@ -1,7 +1,5 @@
 package com.leetcode;
 
-import com.algo.day03_LinkList.List;
-
 /**
  * https://leetcode-cn.com/problems/reverse-linked-list/
  * 反转一个单链表。

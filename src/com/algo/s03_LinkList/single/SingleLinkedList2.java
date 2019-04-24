@@ -1,6 +1,6 @@
-package com.algo.day03_LinkList.single;
+package com.algo.s03_LinkList.single;
 
-import com.algo.day03_LinkList.AbstractList;
+import com.algo.s03_LinkList.AbstractList;
 
 /**
  * 增加虚拟头结点：节点操作统一处理逻辑

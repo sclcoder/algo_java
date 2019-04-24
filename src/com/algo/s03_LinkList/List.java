@@ -1,4 +1,4 @@
-package com.algo.day03_LinkList;
+package com.algo.s03_LinkList;
 
 /**
  * 定义List接口

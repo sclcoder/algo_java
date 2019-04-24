@@ -1,4 +1,4 @@
-package com.algo.day03_LinkList;
+package com.algo.s03_LinkList;
 
 public abstract class AbstractList<T> implements List<T> {
 

@@ -1,4 +1,4 @@
-package com.algo.day02_ArrayList;
+package com.algo.s01_ArrayList;
 
 import java.util.Objects;
 

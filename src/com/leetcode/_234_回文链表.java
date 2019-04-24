@@ -14,8 +14,6 @@ package com.leetcode;
  * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
  */
 
-import com.algo.day03_LinkList.List;
-
 /**
  * 之前看过此题的思路：利用快慢指针
  *

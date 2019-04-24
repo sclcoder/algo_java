@@ -1,7 +1,5 @@
 package com.leetcode;
 
-import com.algo.day03_LinkList.List;
-
 public class _237_删除链表中的节点 {
 
     /**

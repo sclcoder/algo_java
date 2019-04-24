@@ -1,7 +1,5 @@
 package com.leetcode;
 
-import com.algo.day03_LinkList.List;
-
 /** https://leetcode-cn.com/problems/remove-linked-list-elements/
  * 删除链表中等于给定值 val 的所有节点。
  * 示例:

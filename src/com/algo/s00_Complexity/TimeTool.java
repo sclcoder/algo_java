@@ -1,4 +1,4 @@
-package com.algo.day01_AC;
+package com.algo.s00_Complexity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
