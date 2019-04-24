@@ -89,26 +89,29 @@ public class LinkedList<T> extends AbstractList<T> {
     @Override
     public void add(int index, T element) {
         addRangeCheck(index);
-
-        if (index == size) { // 向最后添加元素
+        /**
+         * 边界条件: first和last指针需要更新的位置
+         */
+        if (index == size) { // 向最后添加元素--last指针需要更新
             Node<T> node = last;
             Node<T> newNode = new Node<>(node, element, null);
-            if (node == null) { // index==0 size==0 第一个元素
+            if (node == null) { // index==0 size==0 第一个元素 first需要更新
                 first = newNode;
             } else {
                 node.next = newNode;
             }
             last = newNode;
         } else {
-            Node<T> node = node(index);
-            Node<T> newNode = new Node<>(node.prev, element, node);
-            if (node.prev != null) {
-                node.prev.next = newNode;
-            } else { // index = 0
+            Node<T> nextNode = node(index);
+            Node<T> prevNode = nextNode.prev;
+            Node<T> newNode = new Node<>(prevNode, element, nextNode); // newNode的 prev 和 next指针处理完毕
+            // 需要处理 prevNode的next和nextNode的prev指针
+            if (prevNode != null) {
+                prevNode.next = newNode;
+            } else { // index = 0 说明添加的是第一个节点
                 first = newNode;
             }
-            node.prev = newNode;
-
+            nextNode.prev = newNode;
         }
         size++;
     }

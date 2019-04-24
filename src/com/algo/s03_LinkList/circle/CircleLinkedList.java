@@ -3,20 +3,44 @@ package com.algo.s03_LinkList.circle;
 import com.algo.s03_LinkList.AbstractList;
 
 /**
- * 双向循环链表
+ * 双向循环链表的实现
+ *
  * @param <T>
  */
 public class CircleLinkedList<T> extends AbstractList<T> {
 
     private Node<T> first;
+    private Node<T> last;
+
     // 节点结构（内部类）
     private static class Node<T> {
         T element;
+        Node<T> prev;
         Node<T> next;
+
         // 构造函数
-        public Node(T element, Node<T> next) {
+        public Node(Node<T> prev, T element, Node<T> next) {
             this.element = element;
+            this.prev = prev;
             this.next = next;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            if (prev != null) {
+                sb.append(prev.element);
+            } else {
+                sb.append("null");
+            }
+            sb.append("<-").append(element).append("->");
+            if (next != null) {
+                sb.append(next.element);
+            } else {
+                sb.append("null");
+            }
+
+            return sb.toString();
         }
     }
 
@@ -27,6 +51,7 @@ public class CircleLinkedList<T> extends AbstractList<T> {
     @Override
     public void clear() {
         first = null;
+        last = null;
         size = 0;
     }
 
@@ -66,11 +91,31 @@ public class CircleLinkedList<T> extends AbstractList<T> {
     @Override
     public void add(int index, T element) {
         addRangeCheck(index);
-        if (index == 0) {
-            first = new Node<>(element,first);
+        /**
+         * 边界条件: 要更新first和last指针的地方
+         */
+        if (index == size) { // 向最后添加元素---为了更新last指针
+            Node<T> tailNode = last;
+            Node<T> newNode = new Node<>(tailNode, element, first);
+            if (tailNode == null) { // index==0 size==0 第一个元素 为了更新first指针
+                newNode.next = newNode; // 指向本身
+                newNode.prev = newNode; // 指向本身
+                first = newNode;
+            } else {
+                tailNode.next = newNode;
+                first.prev = newNode;
+            }
+            last = newNode;
         } else {
-            Node<T> prev = node(index -1);
-            prev.next = new Node<>(element,prev.next);
+            Node<T> nextNode = node(index);
+            Node<T> prevNode = nextNode.prev;
+            Node<T> newNode = new Node<>(prevNode, element, nextNode); // newNode的 prev 和 next指针处理完毕
+            // 需要处理 prevNode的next和nextNode的prev指针
+            prevNode.next = newNode; // 循环链表且index!=size,那么prevNode.next肯定值
+            if (index == 0){ // index==0添加元素
+                first = newNode;
+            }
+            nextNode.prev = newNode;
         }
         size++;
     }
@@ -84,18 +129,35 @@ public class CircleLinkedList<T> extends AbstractList<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        Node<T> node;
-        if (index == 0){
-            node = first;
-            first = first.next;
+        return remove(node(index));
+    }
+
+    private T remove(Node<T> targetNode){
+        /**
+         * 边界条件: 要更新first和last指针的地方
+         */
+        if (size == 1){
+            first = null;
+            last = null;
         } else {
-            Node<T> prev = node(index-1);
-            node = prev.next;
-            prev.next = node.next;
+            Node<T> prevNode = targetNode.prev;
+            Node<T> nextNode = targetNode.next;
+            // 主要逻辑
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+
+            // 特殊处理 -- 删除第一or最后一个 链表的first和last指针要更新
+            if (first == targetNode) { // index == 0
+                first = nextNode;
+            }
+            if (last == targetNode) { // index == size-1
+                last = prevNode;
+            }
         }
         size--;
-        return node.element;
+        return targetNode.element;
     }
+
 
     /**
      * 查看元素的索引
@@ -132,28 +194,37 @@ public class CircleLinkedList<T> extends AbstractList<T> {
      */
     public Node<T> node(int index) {
         rangeCheck(index);
-        Node<T> node = first;
-        /**
-         * 注意边界: next的次数和index的值是一致的
-         */
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return node;
-    }
 
+        if (index < (size >> 1)) { // 从前边开始查找
+            /**
+             * 注意边界: next的次数和index的值是一致的
+             */
+            Node<T> node = first;
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+            return node;
+
+        } else { // 从后面开始查找
+            Node<T> node = last;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
+            return node;
+        }
+    }
 
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("CircleLinkedList{size=").append(size).append(", elements=[");
+        sb.append("LinkedList{size=").append(size).append(", elements=[");
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i != 0) {
                 sb.append(",");
             }
-            sb.append(node.element);
+            sb.append(node);
             node = node.next;
         }
         sb.append("]}");

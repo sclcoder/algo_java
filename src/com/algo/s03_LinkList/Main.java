@@ -1,7 +1,9 @@
 package com.algo.s03_LinkList;
 
 
+import com.algo.s03_LinkList.circle.CircleLinkedList;
 import com.algo.s03_LinkList.circle.SingleCircleLinkedList;
+import com.algo.s03_LinkList.single.SingleLinkedList;
 import com.algo.s03_LinkList.single.SingleLinkedList2;
 
 public class Main {
@@ -41,10 +43,10 @@ public class Main {
         list.add(0, 55); // [55, 11, 22, 33, 44]
         list.add(2, 66); // [55, 11, 66, 22, 33, 44]
         list.add(list.size(), 77); // [55, 11, 66, 22, 33, 44, 77]
-
+////
         list.remove(0); // [11, 66, 22, 33, 44, 77]
-//        list.remove(2); // [11, 66, 33, 44, 77]
-//        list.remove(list.size() - 1); // [11, 66, 33, 44]
+        list.remove(2); // [11, 66, 33, 44, 77]
+        list.remove(list.size() - 1); // [11, 66, 33, 44]
 //
 //        Asserts.test(list.indexOf(44) == 3);
 //        Asserts.test(list.indexOf(22) == List.ELEMENT_NOT_FOUND);
@@ -60,10 +62,12 @@ public class Main {
 
 //        testArrayList();
 //        testLinkedList();
-
-//        testList(new ArrayList<>());
-//        testList(new LinkedList<>());
-        testList(new SingleCircleLinkedList<>());
+//        testList(new ArrayList<>()); // 动态数组
+//          testList(new SingleLinkedList<>()); // 单向链表
+//          testList(new SingleLinkedList2<>()); // 单向链表（带虚节点）
+//          testList(new LinkedList<>());// 双向链表
+//          testList(new SingleCircleLinkedList<>()); // 单向循环链表
+          testList(new CircleLinkedList<>()); // 双向循环链表
 
 
         /*

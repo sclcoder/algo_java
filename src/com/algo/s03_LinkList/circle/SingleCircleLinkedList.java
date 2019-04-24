@@ -112,7 +112,7 @@ public class SingleCircleLinkedList<T> extends AbstractList<T> {
 
         if (index == 0) {
             node = first;
-            if (size == 1) {
+            if (size == 1) { // size==1时 自己指自己不特殊处理删除不了
                 first = null;
             } else {
                 Node<T> tailNode = node(size - 1);
