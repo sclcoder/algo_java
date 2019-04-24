@@ -1,18 +1,31 @@
-package com.algo.s03_LinkList.single;
+package com.algo.s03_LinkList.circle;
 
 import com.algo.s03_LinkList.AbstractList;
 
 /**
- * 单向链表
+ * 单向循环链表
+ *
  * @param <T>
  */
-public class SingleLinkedList<T> extends AbstractList<T> {
+public class SingleCircleLinkedList<T> extends AbstractList<T> {
 
     private Node<T> first;
+
     // 节点结构（内部类）
     private static class Node<T> {
         T element;
         Node<T> next;
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(element).append("->");
+            if (next != null) {
+                sb.append(next.element);
+            }
+            return sb.toString();
+        }
+
         // 构造函数
         public Node(T element, Node<T> next) {
             this.element = element;
@@ -67,10 +80,21 @@ public class SingleLinkedList<T> extends AbstractList<T> {
     public void add(int index, T element) {
         addRangeCheck(index);
         if (index == 0) {
-            first = new Node<>(element,first);
+            Node<T> firstNode = new Node<>(element, first);
+            Node<T> tailNode;
+//            if (size == 0){
+//                tailNode = firstNode;
+//            } else {
+//                tailNode = node(size-1);
+//            }
+            tailNode = (size == 0) ? firstNode : node(size - 1);
+            tailNode.next = firstNode;
+            first = firstNode;
+
         } else {
-            Node<T> prev = node(index -1);
-            prev.next = new Node<>(element,prev.next);
+            // 循环链表: 不用特殊处理逻辑和单链表一样
+            Node<T> prev = node(index - 1);
+            prev.next = new Node<>(element, prev.next);
         }
         size++;
     }
@@ -85,11 +109,18 @@ public class SingleLinkedList<T> extends AbstractList<T> {
     public T remove(int index) {
         rangeCheck(index);
         Node<T> node;
-        if (index == 0){
+
+        if (index == 0) {
             node = first;
-            first = first.next;
+            if (size == 1) {
+                first = null;
+            } else {
+                Node<T> tailNode = node(size - 1);
+                first = first.next;
+                tailNode.next = first;
+            }
         } else {
-            Node<T> prev = node(index-1);
+            Node<T> prev = node(index - 1);
             node = prev.next;
             prev.next = node.next;
         }
@@ -143,17 +174,16 @@ public class SingleLinkedList<T> extends AbstractList<T> {
     }
 
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SingleLinkedList{size=").append(size).append(", elements=[");
+        sb.append("SingleCircleLinkedList{size=").append(size).append(", elements=[");
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i != 0) {
                 sb.append(",");
             }
-            sb.append(node.element);
+            sb.append(node);
             node = node.next;
         }
         sb.append("]}");

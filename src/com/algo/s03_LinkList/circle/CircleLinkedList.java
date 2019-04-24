@@ -1,12 +1,12 @@
-package com.algo.s03_LinkList.single;
+package com.algo.s03_LinkList.circle;
 
 import com.algo.s03_LinkList.AbstractList;
 
 /**
- * 单向链表
+ * 双向循环链表
  * @param <T>
  */
-public class SingleLinkedList<T> extends AbstractList<T> {
+public class CircleLinkedList<T> extends AbstractList<T> {
 
     private Node<T> first;
     // 节点结构（内部类）
@@ -147,7 +147,7 @@ public class SingleLinkedList<T> extends AbstractList<T> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SingleLinkedList{size=").append(size).append(", elements=[");
+        sb.append("CircleLinkedList{size=").append(size).append(", elements=[");
         Node<T> node = first;
         for (int i = 0; i < size; i++) {
             if (i != 0) {
