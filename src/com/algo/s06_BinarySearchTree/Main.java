@@ -52,8 +52,17 @@ public class Main {
         }
         BinaryTrees.println(bst3);
     }
+
+    private static void test3(){
+        BinarySearchTree<Integer> bst = new BinarySearchTree();
+        for (int i = 0; i < 30; i++) {
+            bst.add((int)(Math.random() * 100));
+        }
+        BinaryTrees.println(bst);
+    }
     public static void main(String[] args) {
 //        test1();
-        test2();
+//        test2();
+        test3();
     }
 }
