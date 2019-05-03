@@ -35,6 +35,12 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
             this.element = element;
             this.parent = parent;
         }
+        public boolean isLeaf(){
+            return left == null && right == null;
+        }
+        public boolean hasTwoChildren(){
+            return left != null && right != null;
+        }
     }
     // 构造函数
     BinarySearchTree(){
@@ -262,7 +268,7 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
 
     /**
      * 非递归: 树的高度即层数 考虑层序遍历
-     * 访问完一层height增加1  何时访问完一层: 记录每一层的值
+     * 访问完一层height增加1  何时访问完一层: 当这一层的节点全部出队列后。所以还需要记录每一层的值。
      * @return
      */
     public int height2(){
@@ -287,8 +293,82 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
                 height++;
             }
         }
-
         return height;
+    }
+
+    /**
+     * 判断是否是完全二叉树
+     */
+    public boolean isComplate(){
+        /**
+         * 判断逻辑
+         * 1.如果树为空 返回false
+         * 2.如果树不是空，开始层次遍历二叉树
+         *   a.如果node.left!=null && node.right!=null将node.left、node.right按顺序入队列
+         *   b.如果node.left==null && node.right!=null返回false
+         *   c.如果node.left!=null && node.right==null
+         *     或者 如果node.left ==null && node.right==null
+         *     那么只有接下来的节点都是叶子节点才返回true 否则返回false
+         */
+        if (root == null) return false;
+        Queue<Node<T>> queue = new LinkedList<>();
+        boolean needLeafNode = false;
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            Node<T> node = queue.poll();
+
+            if (needLeafNode){ // 要求是叶子节点
+                // 如果不是叶子节点返回false
+                if (node.left != null || node.right != null) return false;
+            }
+
+            if (node.left != null && node.right != null){
+                // 入队列
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else if (node.left == null && node.right != null){
+                return false;
+            } else {
+                /**
+                 * 我的开始的错误写法
+                 *  if (node.left != null || node.right != null){
+                 *     return false;
+                 *  }
+                 *  错误原因: 将当前的节点node和其node.left、node.right节点搞混乱了
+                 *           当前遍历到（出队列）的的节点是node 而不是其子节点
+                 */
+
+                /**
+                 * 明确的思路: 来到这说明要求下一次访问的节点必须是叶子节点。
+                 * 所以这里搞个标志,标明下次出栈的节点必须为叶子节点
+                 */
+                needLeafNode = true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 判断是否是完全二叉树
+     */
+    public boolean isComplate2(){
+        if (root == null) return false;
+        boolean needLeafNode = false;
+        Queue<Node<T>> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            Node<T> node = queue.poll();
+            if (needLeafNode && !node.isLeaf()) return false;
+            if (node.hasTwoChildren()){ // 有左右节点
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else if (node.left == null && node.right != null){
+                return false;
+            } else {
+                needLeafNode = true;
+            }
+        }
+        return true;
     }
 
 

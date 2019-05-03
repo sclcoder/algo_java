@@ -22,14 +22,18 @@ public class Main {
 
     private static void test1() {
         Integer data[] = new Integer[]{
-                7, 4, 9, 2, 5, 8, 11, 3
+                7, 4, 9, 2, 5, 8, 11,1,3
         };
+//        Integer data[] = new Integer[]{
+//                29,9,80,57,92
+//        };
         BinarySearchTree<Integer> bst = new BinarySearchTree();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
         System.out.println(bst.height2());
         BinaryTrees.println(bst);
+        System.out.println(bst.isComplate());
     }
 
     private static void test2() {
@@ -58,11 +62,12 @@ public class Main {
 
     private static void test3() {
         BinarySearchTree<Integer> bst = new BinarySearchTree();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 5; i++) {
             bst.add((int) (Math.random() * 100));
         }
-//        BinaryTrees.println(bst);
-        Files.writeToFile("/Users/tiny/Desktop/tree.txt", BinaryTrees.printString(bst));
+        BinaryTrees.println(bst);
+        System.out.println(bst.isComplate());
+//        Files.writeToFile("/Users/tiny/Desktop/tree.txt", BinaryTrees.printString(bst));
     }
 
     public static void test4() {
