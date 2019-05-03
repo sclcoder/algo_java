@@ -371,6 +371,77 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
         return true;
     }
 
+    /**
+     * 查找前驱节点
+     * 前驱节点: 中序遍历时的前一个节点
+     * 步骤：比较难想出来
+     * 情况1:     node.left != null
+     * 查找过程:  根据中序遍历的特点可知，其前驱肯定是左子树中的最后一个节点
+     *           predecessor = node.left.right.right...
+     *           终止条件: right = null;
+     *
+     * 情况2:    node.left == null && node.parent != null;
+     * 查找过程:  没有左子树,那就不能向左子树寻找,由于是寻找前驱节点,所以肯定也不能寻找右子树.所以只能向上寻找即查找父节点。
+     *           如果node在父节点的左子树中,那是该节点的后驱节点.只有当node在的父节点右子树中时,才能说明找到了前驱。否则没有前驱。
+     *           predecessor = node.parent.parent...
+     *           终止条件 node在parent的右子树中 或 parent == null(说明没有前驱)
+     * 情况3:     node.left == null && node.parent == null;
+     * 查找过程:  属于情况2中的一种中间情况 即没有前驱节点
+     *
+     */
+    public Node<T> predecessor(Node<T> node){
+        if (node == null) return null;
+        // 1.前驱节点在左子树中
+        Node<T> p = node.left;
+        if (p != null){
+            while (p.right != null){
+                p = p.right;
+            }
+            return p;
+        }
+
+        // 2.前驱节点在父节点(祖父节点...)中的情况
+        while (node.parent != null && node.parent.left == node){
+            node = node.parent;
+        }
+        return node.parent;
+    }
+
+    /**
+     * 查找后驱节点
+     * 后驱节点: 中序遍历时的后一个节点
+     * 步骤：比较难想出来
+     * 情况1:     node.right != null
+     * 查找过程:  根据中序遍历的特点可知，其后驱肯定是右子树中的第一个节点
+     *           predecessor = node.right.left.left...
+     *           终止条件: left = null;
+     *
+     * 情况2:    node.right == null && node.parent != null;
+     * 查找过程:  没有右子树,那就不能向右子树寻找,由于是寻找后驱节点,所以肯定也不能寻找左子树.所以只能向上寻找即查找父节点。
+     *           如果node在父节点右子树中,那是该节点的前驱节点.只有找到的node在父节点的左子树中,才能说明找到了后驱。否则没有后驱。
+     *           predecessor = node.parent.parent...
+     *           终止条件 node在parent的左子树中 或 parent == null(说明没有前驱)
+     * 情况3:     node.right == null && node.parent == null;
+     * 查找过程:  属于情况2中的一种中间情况 即没有后驱节点
+     *
+     */
+    public Node<T> successor(Node<T> node){
+        if (node == null) return null;
+
+        // 后驱节点在右子树中
+        Node<T> s = node.right;
+        if (s != null){
+            while (s.left != null){
+                s = s.left;
+            }
+            return s;
+        }
+        // 后驱节点在父节点(祖父节点...)中的情况
+        while (node.parent != null && node.parent.right == node){
+            node = node.parent;
+        }
+        return node.parent;
+    }
 
     /**
      * 二叉树自实现打印展示
