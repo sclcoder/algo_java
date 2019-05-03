@@ -1,6 +1,5 @@
 package com.algo.s06_BinarySearchTree;
 import com.algo.s06_BinarySearchTree.printer.BinaryTreeInfo;
-
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -124,41 +123,73 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
      * 前序遍历 - 先访问父节点再访问子节点
      * 通过一个节点开始遍历
      */
-    public void  preOrderTraversal(){
-        preOrderTraversal(root);
+//    public void  preOrderTraversal(){
+//        preOrderTraversal(root);
+//    }
+//    private void  preOrderTraversal(Node<T> node){
+//        if (node == null) return;
+//        System.out.println(node.element);
+//        preOrderTraversal(node.left);
+//        preOrderTraversal(node.right);
+//        return; // 一个完整流程结束后退出函数栈
+//    }
+
+
+    public void  preOrderTraversal(Visitor<T> visitor){
+        preOrderTraversal(root,visitor);
     }
-    private void  preOrderTraversal(Node<T> node){
-        if (node == null) return;
-        System.out.println(node.element);
-        preOrderTraversal(node.left);
-        preOrderTraversal(node.right);
+    private void  preOrderTraversal(Node<T> node,Visitor<T> visitor){
+        if (node == null || visitor == null) return;
+        visitor.visit(node.element);
+        preOrderTraversal(node.left,visitor);
+        preOrderTraversal(node.right,visitor);
         return; // 一个完整流程结束后退出函数栈
     }
 
     /**
      * 中序遍历 - 先访问父节点再访问子节点
      */
-    public void  inOrderTraversal(){
-        inOrderTraversal(root);
+//    public void  inOrderTraversal(){
+//        inOrderTraversal(root);
+//    }
+//    private void  inOrderTraversal(Node<T> node){
+//        if (node == null) return;
+//        inOrderTraversal(node.left);
+//        System.out.println(node.element);
+//        inOrderTraversal(node.right);
+//        return; // 一个完整流程结束后退出函数栈
+//    }
+    public void  inOrderTraversal(Visitor<T> visitor){
+        inOrderTraversal(root,visitor);
     }
-    private void  inOrderTraversal(Node<T> node){
-        if (node == null) return;
-        inOrderTraversal(node.left);
-        System.out.println(node.element);
-        inOrderTraversal(node.right);
+    private void  inOrderTraversal(Node<T> node,Visitor<T> visitor){
+        if (node == null || visitor == null) return;
+        inOrderTraversal(node.left,visitor);
+        visitor.visit(node.element);
+        inOrderTraversal(node.right,visitor);
         return; // 一个完整流程结束后退出函数栈
     }
     /**
      * 后序遍历 - 先访问父节点再访问子节点
      */
-    public void  postOrderTraversal(){
-        postOrderTraversal(root);
+//    public void  postOrderTraversal(){
+//        postOrderTraversal(root);
+//    }
+//    private void  postOrderTraversal(Node<T> node){
+//        if (node == null) return;
+//        postOrderTraversal(node.left);
+//        postOrderTraversal(node.right);
+//        System.out.println(node.element);
+//        return; // 一个完整流程结束后退出函数栈
+//    }
+    public void  postOrderTraversal(Visitor<T> visitor){
+        postOrderTraversal(root,visitor);
     }
-    private void  postOrderTraversal(Node<T> node){
-        if (node == null) return;
-        postOrderTraversal(node.left);
-        postOrderTraversal(node.right);
-        System.out.println(node.element);
+    private void  postOrderTraversal(Node<T> node,Visitor<T> visitor){
+        if (node == null || visitor == null) return;
+        postOrderTraversal(node.left,visitor);
+        postOrderTraversal(node.right,visitor);
+        visitor.visit(node.element);
         return; // 一个完整流程结束后退出函数栈
     }
 
@@ -193,7 +224,7 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
     }
 
     /**
-     * 待着访问器的层序遍历
+     * 有访问器的层序遍历
      */
     public void levelOrder(Visitor<T> visitor){
         if (root == null || visitor == null) return;
@@ -212,6 +243,73 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
         }
     }
 
+    /**
+     * 获取二叉树的高度
+     * @return
+     */
+    public int height(){
+        return height1(root);
+    }
+
+    /**
+     * 递归思路: 树的高度就是根节点的高度
+     * 根节点的高度 = 左右子树的最大高度 + 1
+     */
+    private int height1(Node<T> node){
+        if (node == null) return 0;
+        return 1 + Math.max(height1(node.left),height1(node.right));
+    }
+
+    /**
+     * 非递归: 树的高度即层数 考虑层序遍历
+     * 访问完一层height增加1  何时访问完一层: 记录每一层的值
+     * @return
+     */
+    public int height2(){
+        if (root == null) return 0;
+        // 数的高度
+        int height = 0;
+        // 存储每一层的元素数量
+        int levelSize = 1;
+        Queue<Node<T>> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            Node<T>node = queue.poll();
+            levelSize--;
+            if (node.left != null){
+                queue.offer(node.left);
+            }
+            if (node.right != null){
+                queue.offer(node.right);
+            }
+            if (levelSize == 0){ // 即将访问下一层
+                levelSize = queue.size();
+                height++;
+            }
+        }
+
+        return height;
+    }
+
+
+    /**
+     * 二叉树自实现打印展示
+     * 利用遍历算法实现打印展示逻辑
+     */
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+       toString(root,sb,"");
+       return sb.toString();
+    }
+    private void toString(Node<T> node, StringBuilder sb,String prefix){
+        if (node == null) return;
+        // 在输出内容之前先输出prefix
+        sb.append(prefix).append(node.element).append("\n");
+        toString(node.left,sb,prefix + "L-");
+        toString(node.right,sb,prefix + "R-");
+        return;
+    }
 
     /**********     私有方法   *******************/
     private void elementNotNullCheck(T element){
