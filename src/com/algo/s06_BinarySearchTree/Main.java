@@ -1,7 +1,6 @@
 package com.algo.s06_BinarySearchTree;
-
+import com.algo.s06_BinarySearchTree.file.Files;
 import com.algo.s06_BinarySearchTree.printer.BinaryTrees;
-
 import java.util.Comparator;
 
 public class Main {
@@ -27,6 +26,7 @@ public class Main {
             bst.add(data[i]);
         }
         BinaryTrees.println(bst);
+        bst.preOrderTraversal();
     }
 
     private static void test2(){
@@ -58,11 +58,43 @@ public class Main {
         for (int i = 0; i < 30; i++) {
             bst.add((int)(Math.random() * 100));
         }
+//        BinaryTrees.println(bst);
+        Files.writeToFile("/Users/tiny/Desktop/tree.txt",BinaryTrees.printString(bst));
+    }
+    public static void test4(){
+        BinarySearchTree<Person> bst = new BinarySearchTree<>();
+        bst.add(new Person(10,"jack"));
+        bst.add(new Person(13,"rose"));
+        bst.add(new Person(8,"tiny"));
+        bst.add(new Person(13,"water"));
         BinaryTrees.println(bst);
+    }
+    // 遍历
+    private static void test5(){
+        Integer data[] = new Integer[]{
+                7,4,9,2,5,8,10,3,1
+        };
+        BinarySearchTree<Integer> bst = new BinarySearchTree();
+        for (int i = 0; i < data.length; i++) {
+            bst.add(data[i]);
+        }
+        BinaryTrees.println(bst);
+//        bst.preOrderTraversal(); // 先序遍历
+//        bst.postOrderTraversal(); // 后序遍历
+//        bst.inOrderTraversal();// 中序
+//        bst.levelOrderTraversal(); // 层次遍历
+          bst.levelOrder(new BinarySearchTree.Visitor<Integer>() {
+              @Override
+              public void visit(Integer element) {
+                  System.out.println("av_"+element);
+              }
+          });
     }
     public static void main(String[] args) {
 //        test1();
 //        test2();
-        test3();
+//        test3();
+//        test4();
+        test5();
     }
 }

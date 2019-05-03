@@ -35,13 +35,13 @@ public class _225_用队列实现栈 {
 
         /** Push element x onto stack. */
         public void push(int x) {
-            queueA.add(x);
+            queueA.offer(x);
         }
 
         /** Removes the element on top of the stack and returns that element. */
         public int pop() {
             while (!queueA.isEmpty() && queueA.size() > 1){
-                 queueB.add(queueA.poll());
+                 queueB.offer(queueA.poll());
             }
             int topElement = queueA.poll(); // poll删除元素
             queueA = queueB;
@@ -52,7 +52,7 @@ public class _225_用队列实现栈 {
         /** Get the top element. */
         public int top() {
             while (!queueA.isEmpty() && queueA.size() > 1){
-                queueB.add(queueA.poll());
+                queueB.offer(queueA.poll());
             }
             return queueA.peek(); // peek不删除元素
         }
