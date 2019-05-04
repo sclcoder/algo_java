@@ -1,6 +1,6 @@
 package com.leetcode.binaryTree;
 
-/**
+/** https://leetcode-cn.com/problems/invert-binary-tree/
  * 翻转一棵二叉树。
  *
  * 示例：
