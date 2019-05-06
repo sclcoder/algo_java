@@ -57,9 +57,9 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
         return size == 0;
     }
     public void clear(){
-
+        root = null;
+        size = 0;
     }
-
     /**
      * 添加元素
      * @param element
@@ -374,15 +374,15 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
     /**
      * 查找前驱节点
      * 前驱节点: 中序遍历时的前一个节点
-     * 步骤：比较难想出来
-     * 情况1:     node.left != null
-     * 查找过程:  根据中序遍历的特点可知，其前驱肯定是左子树中的最后一个节点
+     * 步骤: 考虑到中序遍历的特点就可以思考出来 easy!!!
+     * 情况1:     有左子树 node.left != null
+     * 查找过程:  根据中序遍历的特点可知，其前驱肯定是左子树中的最后一个节点. 左子树的最后一个节点就是其最右的节点
      *           predecessor = node.left.right.right...
      *           终止条件: right = null;
      *
-     * 情况2:    node.left == null && node.parent != null;
+     * 情况2:    没有左子树 node.left == null && node.parent != null;
      * 查找过程:  没有左子树,那就不能向左子树寻找,由于是寻找前驱节点,所以肯定也不能寻找右子树.所以只能向上寻找即查找父节点。
-     *           如果node在父节点的左子树中,那是该节点的后驱节点.只有当node在的父节点右子树中时,才能说明找到了前驱。否则没有前驱。
+     *           如果node在父节点的左子树中,那是父节点是该node后驱节点.只有当node在的父节点右子树中时,才能说明找到了前驱。否则没有前驱。
      *           predecessor = node.parent.parent...
      *           终止条件 node在parent的右子树中 或 parent == null(说明没有前驱)
      * 情况3:     node.left == null && node.parent == null;
@@ -399,9 +399,9 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
             }
             return p;
         }
-
         // 2.前驱节点在父节点(祖父节点...)中的情况
         while (node.parent != null && node.parent.left == node){
+            // node.parent.left == node 如果是在左子树中就继续向上找
             node = node.parent;
         }
         return node.parent;
@@ -438,6 +438,7 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
         }
         // 后驱节点在父节点(祖父节点...)中的情况
         while (node.parent != null && node.parent.right == node){
+            // node.parent.left == node 如果是在右子树中就继续向上找
             node = node.parent;
         }
         return node.parent;
