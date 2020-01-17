@@ -113,10 +113,44 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
         }
     }
     public void remove(T element){
-
+        remove(node(element));
+    }
+    public void remove(Node<T> node){
+        /**
+         * 删除节点逻辑:
+         * 1.度为0的节点 即叶子节点
+         * a.node.parent != null 直接删除
+         *  node.parent.left = null or node.parent.left = null
+         *  
+         *  b.node.parent == null 说明是根节点(只有一个根节点)
+         *  root = null;
+         *
+         * 2.度为1的节点
+         *
+         *
+         * 3.度为2的节点
+         */
     }
     public boolean contains(T element){
-        return true;
+        return node(element) != null;
+    }
+
+    private Node<T> node(T element){
+        /**
+         * 查找指定节点
+         * 可以使用遍历挨个查找 但是这里是搜索二叉树 可以利用有序性进行查找(二分查找)更高效
+         */
+        Node<T> node = root;
+        while (node != null){
+            int cmp = compare(element,node.element);
+            if (cmp == 0) return node;
+            if (cmp < 0) {
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
+        return null;
     }
 
     /**********     二叉树遍历   *******************/
@@ -508,6 +542,11 @@ public class BinarySearchTree<T> implements BinaryTreeInfo  {
 
     @Override
     public Object string(Object node) {
-        return ((Node<T>)node).element;
+        Node<T> newNode = (Node<T>)node;
+        String parentString = "null";
+        if (newNode.parent != null){
+            parentString = newNode.parent.element.toString();
+        }
+        return ((Node<T>)node).element + "(p_" + parentString + ")";
     }
 }

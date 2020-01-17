@@ -48,19 +48,13 @@ public class _206_反转链表 {
      * @return
      */
     public ListNode reversiList2(ListNode head){
-        // head == null 直接返回就行没必要翻转,注意head == null一定要在前面
         if (head == null || head.next == null){
-            // 最后一个节点,递归函数第一次退栈
             return head;
         }
-        // 这层调用获取到尾部节点
-        ListNode tailNode = reversiList2(head.next);
-        // 注意此时的head是递归函数为退栈后的head
-        // 获取到当前节点的下一个节点并改变其next指向为当前的节点
+        ListNode newNode = reversiList2(head.next);
         head.next.next = head;
-        // 清空当前节点的next指向
         head.next = null;
-        // 返回尾部节点,函数退栈
-        return tailNode;
+        // 翻转好的节点
+        return newNode;
     }
 }
