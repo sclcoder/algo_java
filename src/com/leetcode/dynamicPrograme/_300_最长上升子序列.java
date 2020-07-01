@@ -7,6 +7,57 @@ public class _300_最长上升子序列 {
     }
 
     /**
+     * 给定一个无序的整数数组，找到其中最长上升子序列的长度。
+     *
+     * 示例:
+     *
+     * 输入: [10,9,2,5,3,7,101,18]
+     * 输出: 4
+     * 解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。
+     *
+     * 说明:
+     *
+     *     可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。
+     *     你算法的时间复杂度应该为 O(n2) 。
+     *
+     * 进阶: 你能将算法的时间复杂度降低到 O(n log n) 吗?
+     *
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/longest-increasing-subsequence
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+
+    public int lengthOfLIS1(int[] nums) {
+        if (nums == null || nums.length ==0 ) return 0;
+        /**
+         * dp[i] 记录以nums[i]结尾的最长上升子序列的长度
+         * 要上升避免不了需要比较数据
+         * 当计算dp[i]时, 需要使用nums[i],与之前的nums[0..j](此处j<i)进行比较。
+         * 如果nums[i]>nums[j] 那么 lens[] = dp[j] + 1;
+         * 遍历所有的的dp[0..j] 与 len的最大值比较，较大者赋值给dp[i]
+         * 如果nums[i]<=nums[j], 因为必须以nums[i] 结尾。所以dp[i]只能等于1了。
+         */
+        int len = nums.length;
+        int maxLen = 1;
+        int[] dp = new int[len];
+        dp[0] = 1;
+        for (int i = 1; i < len; i++) {
+            dp[i] = 1;
+            for (int j = i-1; j >= 0 ; j--) {
+                if (nums[i] > nums[j]){
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+                maxLen = Math.max(maxLen,dp[i]);
+            }
+        }
+
+        return maxLen;
+    }
+
+
+
+
+    /**
      * 解题思路：
      *     状态定义：
      *     dp[i] 的值代表 nums 前 i个数字的最长子序列长度。
@@ -48,24 +99,5 @@ public class _300_最长上升子序列 {
         }
         return max;
     }
-        /**
-         * 给定一个无序的整数数组，找到其中最长上升子序列的长度。
-         *
-         * 示例:
-         *
-         * 输入: [10,9,2,5,3,7,101,18]
-         * 输出: 4
-         * 解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。
-         *
-         * 说明:
-         *
-         *     可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。
-         *     你算法的时间复杂度应该为 O(n2) 。
-         *
-         * 进阶: 你能将算法的时间复杂度降低到 O(n log n) 吗?
-         *
-         * 来源：力扣（LeetCode）
-         * 链接：https://leetcode-cn.com/problems/longest-increasing-subsequence
-         * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
-         */
+
 }

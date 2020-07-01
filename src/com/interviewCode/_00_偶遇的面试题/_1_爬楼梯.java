@@ -1,4 +1,4 @@
-package com.interviewCode;
+package com.interviewCode._00_偶遇的面试题;
 public class _1_爬楼梯 {
     public static void main(String[] args) {
         /** n阶台阶的走法 每次走m个台阶（m<=n）

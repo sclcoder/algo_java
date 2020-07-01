@@ -2,9 +2,51 @@ package com.leetcode.dynamicPrograme;
 
 public class _5_最长回文字符串 {
     public static void main(String[] args) {
-        String string = "abasdfasdf";
-        System.out.println(longestPalindrome(string));
-        System.out.println(longestPalindrome1(string));
+        String string = "cbbd";
+//        System.out.println(longestPalindrome(string));
+//        System.out.println(longestPalindrome1(string));
+        System.out.println(longestPalindromeFinal(string));
+    }
+
+    /**    1、以这种二维矩阵(数组)能表示出所有子串的起始位置[i,j]即表示所有的子串信息 其中j>=i
+     *      j    0    1    2    3     4
+     *   i  dp   a    b    a    s     d
+     *   0   a   T    F    T    F     F
+     *   1   b        T    F    F     F
+     *   2   a             T    F     F
+     *   3   s                  T     F
+     *   4   d                        T
+
+     */
+    public static String longestPalindromeFinal(String s){
+        if (s == null || s.length() == 0) return s;
+        char[] cs = s.toCharArray();
+        /**
+         * dp[i][j] 记录 cs(i,j)这个子串是否是回文子串
+         * 如果 j-i<=1 那么 dp[i][j] = cs[i] == cs[j];
+         * 如果 j-i>1 则  dp[i][j] = cs[i]==cs[j] && dp[i+1][j-1]
+         * 注意: dp[i][j]的推导与dp[i+1][j-1]相关。遍历时主要先后顺序。此处i的遍历应该从大到小
+         * 题目要求求解最长回文子串，只需要记录其起始位置和长度即可
+         */
+        boolean[][] dp = new boolean[cs.length][cs.length];
+        int maxLen = 1;
+        int begin = 0;
+        for (int i = cs.length; i >= 0; i--) {
+            for (int j = i; j < cs.length; j++) {
+                if (j-i<=1){
+                    dp[i][j] = cs[i] == cs[j];
+                } else {
+                    dp[i][j] = cs[i]==cs[j] && dp[i+1][j-1];
+                }
+                int len = j-i+1;
+                if (dp[i][j] && len > maxLen){
+                   maxLen = len;
+                   begin = i;
+                }
+            }
+        }
+
+        return new  String(cs,begin,maxLen);
     }
 
     /**
@@ -86,22 +128,5 @@ public class _5_最长回文字符串 {
         }
         return true;
     }
-    /**
-     * 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
-     *
-     * 示例 1：
-     *
-     * 输入: "babad"
-     * 输出: "bab"
-     * 注意: "aba" 也是一个有效答案。
-     *
-     * 示例 2：
-     *
-     * 输入: "cbbd"
-     * 输出: "bb"
-     *
-     * 来源：力扣（LeetCode）
-     * 链接：https://leetcode-cn.com/problems/longest-palindromic-substring
-     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
-     */
+
 }

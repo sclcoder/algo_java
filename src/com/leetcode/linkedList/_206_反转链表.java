@@ -1,5 +1,7 @@
 package com.leetcode.linkedList;
 
+import com.algo.s03_LinkList.List;
+
 /**
  * https://leetcode-cn.com/problems/reverse-linked-list/
  * 反转一个单链表。
@@ -28,10 +30,10 @@ public class _206_反转链表 {
          * 注意边界条件: head = null 才到达最后一个节点的next指针
          */
         while (head != null) {
-            ListNode temp = head.next;
+            ListNode tempNode = head.next;
             head.next = newNode;
             newNode = head;
-            head = temp;
+            head = tempNode;
         }
         return newNode;
     }
