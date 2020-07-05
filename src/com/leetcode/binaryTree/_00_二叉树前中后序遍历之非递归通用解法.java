@@ -1,5 +1,4 @@
 package com.leetcode.binaryTree;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -29,9 +28,6 @@ public class _00_二叉树前中后序遍历之非递归通用解法 {
         }
         return res;
     }
-
-
-
 
     public List<Integer> preorderTraversal(TreeNode root){
 

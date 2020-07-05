@@ -66,7 +66,7 @@ public class _99_恢复二叉搜索树 {
 
     /**
      *   morris遍历步骤
-     *   假设挡墙遍历的节点是N
+     *   假设当前遍历的节点是N
      *   1. 如果N.left != null ,找到N的前驱节点P(中序遍历中的前一个节点)
      *      a.如果 P.right == null.
      *             P.right = N
