@@ -38,13 +38,53 @@ import java.util.List;
  * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  *
  */
-public class _37_组合总和 {
+public class _39_组合总和 {
     public static void main(String[] args) {
         int[] candidates = {2,3,5};
 //        Arrays.sort(candidates); // 升序
-        List<List<Integer>> res = combinationSum(candidates,8);
+        List<List<Integer>> res = combinationSum_rewrite(candidates,8);
         System.out.println(res);
     }
+    /**
+     * 递归深度的确定: 只要求出的和小于target就需要持续递归
+     * 1.此题的难点就是要求解集不能包含重复的组合,就看怎样设计能保证取到的结果不重复
+     *      2           3         5
+     *   2  3  5     3  5        5
+     * 235 35  5
+     * 画图看看怎样设计
+     */
+    static public  List<List<Integer>> combinationSum_rewrite(int[] candidates, int target){
+         List<List<Integer>> res = new ArrayList<>();
+         List<Integer> result = new ArrayList<>();
+         dfs(0,candidates,target,res,result);
+         return res;
+    }
+
+    static public void dfs(int start,int[] candidates, int target, List<List<Integer>> res , List<Integer> result){
+        if (target == 0){
+            res.add(new ArrayList<>(result));
+            return;
+        } else {
+            if (target > 0){
+                for (int i = start; i < candidates.length ; i++) {
+                    int candidate = candidates[i];
+                    result.add(candidate);
+                    dfs(i,candidates,target - candidate ,res, result);
+                    // 回溯
+                    result.remove(result.size()-1);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
     static List<List<Integer>> res = new ArrayList<>();
     public static List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<Integer> result = new ArrayList<>();

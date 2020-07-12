@@ -1,4 +1,5 @@
 package com.leetcode.dfs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,13 @@ import java.util.Map;
  * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  *
  *
+ *  之前做过这个题目，时隔半年在刷dfs竟然不会做了，这一切说明我还没有完全掌握dfs
+ *  这次一定要争取深入理解dfs
+ *
+ *  "23"
+ *  第一次递归 可选项为: a b c
+ *  第二次递归 可选项为  d e f
+ *
  */
 
 
@@ -32,6 +40,53 @@ public class _17_电话号码的字母组合 {
         List<String> list = letterCombinations("237");
         System.out.println(list);
     }
+
+    static Map<String,String> phones = new HashMap<String, String>(){
+        {
+            put("2", "abc");
+            put("3", "def");
+            put("4", "ghi");
+            put("5", "jkl");
+            put("6", "mno");
+            put("7", "pqrs");
+            put("8", "tuv");
+            put("9", "wxyz");
+        }
+    };
+
+    public static List<String> letterCombinations(String digits) {
+        char[] nums = digits.toCharArray();
+        List<String> res = new ArrayList<>();
+        if (digits.length() == 0) return res;
+        StringBuilder sb = new StringBuilder();
+        dfs(0, res, nums, sb);
+        return res;
+    }
+    public static void dfs(int start , List<String> res, char[] nums, StringBuilder sb){
+
+        if (start == nums.length){
+            res.add(new String(sb.toString()));
+        } else {
+            char num = nums[start];
+            String string = new String(new char[]{num});
+            /// 每次递归的可选项
+            char[] digits = phones.get(string).toCharArray();
+            for (int i = 0; i < digits.length; i++) {
+                sb.append(digits[i]);
+                dfs(start + 1, res, nums, sb);
+                sb.deleteCharAt(sb.length()-1);
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
     static List<String> res = new ArrayList<>();
     static Map<String,String> phone = new HashMap<String, String>(){
         {
@@ -45,7 +100,9 @@ public class _17_电话号码的字母组合 {
             put("9", "wxyz");
         }
     };
-    public static List<String> letterCombinations(String digits) {
+
+
+    public static List<String> letterCombinations_old(String digits) {
         String result = "";
         dfs(result,digits);
         return res;

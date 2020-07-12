@@ -1,5 +1,4 @@
 package com.leetcode.dfs;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +22,7 @@ public class _47_全排列II {
      * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
     public static void main(String[] args) {
-        permuteUnique(new int[]{1,2,2});
+        permuteUnique(new int[]{1,2,2,3});
         System.out.println(res);
     }
 
@@ -41,9 +40,7 @@ public class _47_全排列II {
         } else {
             for (int i = 0; i < nums.length ; i++) {
                 if (used[i] == 1 ) continue;
-                // 这个判断条件是在回溯后,要重新决策时起作用: 回溯时这层决策的状态已经重置, 如果这时决策的选择的值和之前决策选择的值相同, 那么则出现了重复
-                // 如果是递归阶段则不需要跳过 而这时used[i-1] == 1
-                if (i > 0 && nums[i] == nums[i-1] && used[i-1] == 0) continue;
+                if (i > 0 && nums[i-1] == nums[i] && used[i-1] == 0) continue;
                 result.add(nums[i]);
                 used[i] = 1;
                 dfs(nums,result,used);

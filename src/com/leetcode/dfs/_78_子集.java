@@ -27,9 +27,29 @@ import java.util.List;
  */
 public class _78_子集 {
     public static void main(String[] args) {
-        subsets(new int[] {1,2,3});
-        System.out.println(res);
+        System.out.println(subsets_rewrite(new int[] {1,2,3}));
     }
+
+    public static List<List<Integer>> subsets_rewrite(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
+        res.add(result);
+        dfs(nums, 0, res, result);
+        return res;
+    }
+    public static void dfs(int[] nums , int start, List<List<Integer>> res, List<Integer> result){
+        for (int i = start; i < nums.length; i++) {
+             result.add(nums[i]);
+             res.add(new ArrayList<>(result));
+             dfs(nums,i+1,res,result);
+             result.remove(result.size()-1);
+        }
+    }
+
+
+
+
+
 
     static List<List<Integer>> res = new ArrayList<>();
 

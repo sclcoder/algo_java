@@ -32,8 +32,33 @@ public class _46_全排列 {
         System.out.println(res);
     }
 
-    static List<List<Integer>> res = new ArrayList<>();
     public static List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
+        int[] used = new int[nums.length];
+        dfs(nums, nums.length,used, result);
+        return res;
+    }
+    public static void dfs(int[] nums, int count , int[] used, List<Integer> result){
+        if (count == 0){
+            res.add(new ArrayList<>(result));
+        }
+        if (count > 0){
+            for (int i = 0; i < nums.length ; i++) {
+                if (used[i] == 1){
+                    continue;
+                }
+                used[i] = 1;
+                result.add(nums[i]);
+                dfs(nums,count-1,used,result);
+                result.remove(result.size()-1);
+                used[i] = 0;
+            }
+        }
+    }
+
+    static List<List<Integer>> res = new ArrayList<>();
+    public static List<List<Integer>> permute_1(int[] nums) {
         List<Integer> result = new ArrayList<>();
         int [] used = new int[nums.length];
         int length = nums.length;
