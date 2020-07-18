@@ -1,16 +1,20 @@
-package com.algo.s03_LinkList;
+package com.leetcode.linkedList.common;
 
-public abstract class AbstractList<T> implements List<T> {
+/**
+ * 实现 接口List<T>部分抽象方法的抽象类
+ * 该抽象类主要用来实现一些公共的方法、属性
+ * @param <T>
+ */
+public abstract class  AbstractList<T> implements List<T>{
 
     /**
-     * 元素的数量
+     * 记录元素数量的属性
      * protected 子类可以访问
      */
     protected int size;
 
     /**
-     * 元素的数量
-     *
+     * 获取元素数量
      * @return
      */
     public int size() {
@@ -19,17 +23,14 @@ public abstract class AbstractList<T> implements List<T> {
 
     /**
      * 是否为空
-     *
      * @return
      */
     public boolean isEmpty() {
         return size == 0;
     }
 
-
     /**
-     * 是否包含某个元素
-     *
+     * 是否包含某元素
      * @param element
      * @return
      */
@@ -39,7 +40,6 @@ public abstract class AbstractList<T> implements List<T> {
 
     /**
      * 添加元素到尾部
-     *
      * @param element
      */
     public void add(T element) {
@@ -47,22 +47,19 @@ public abstract class AbstractList<T> implements List<T> {
     }
 
     /**
-     * 边界条件检查
+     * 边界检查
+     * @param index
+     * @return
      */
     protected void rangeCheck(int index){
-        if (index < 0 || index >= size) {
+        if (index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
+        }
+    }
+    protected void addRangeCheck(int index) {
+        if (index < 0 || index > size){
             throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
         }
     }
 
-    /**
-     * 添加元素边界检查
-     * @param index
-     */
-    protected  void addRangeCheck(int index){
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index" + index + ", Size" + size);
-        }
-    }
 }
-

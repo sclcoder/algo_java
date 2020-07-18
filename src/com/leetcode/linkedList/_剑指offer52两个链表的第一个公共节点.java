@@ -35,7 +35,7 @@ package com.leetcode.linkedList;
  *     可假定整个链表结构中没有循环。
  *     程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
  */
-public class _160_相交链表 {
+public class _剑指offer52两个链表的第一个公共节点 {
 
     /**
      * 暴力法
@@ -57,27 +57,19 @@ public class _160_相交链表 {
     }
 
 
-
-
     /**
-     *  没有好的思路，完全参照高票解法:  此解法很是巧妙啊啊啊啊啊啊啊啊
-     *  思路:
-     *  定义两个指针, 第一轮让两个到达末尾的节点指向另一个链表的头部,
-     *  最后如果相遇则为交点(在第一轮移动中恰好抹除了长度差)两个指针等于移动了相同的距离, 有交点就返回, 无交点就是各走了两条指针的长度
+     * 头尾相接法
      */
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        if (headA == null || headB == null) return null;
-        ListNode Pa = headA, Pb = headB;
-        /**
-         * 在这里第一轮体现在pA和pB第一次到达尾部会移向另一链表的表头, 而第二轮体现在如果pA或pB相交就返回交点,
-         * 不相交最后就是null==null
-         *  1.如果长度相同，且没有交点，在循环到第一轮末尾时，pA和pB会同时为null，这时就相等退出了。
-         *  2.如果长度不同，没有交点，会在第二轮末尾同时为null，相等退出。
-         */
-        while (Pa != Pb){
-            Pa = (Pa == null ? headB : Pa.next);
-            Pb = (Pb == null ? headA : Pb.next);
+    public ListNode getIntersectionNode_best(ListNode headA, ListNode headB) {
+        ListNode curA = headA;
+        ListNode curB = headB;
+
+        while (curA != curB){
+            curA = curA == null ?  headB : curA.next;
+            curB = curB == null ?  headA : curB.next;
         }
-        return Pa;
+        return curA;
     }
+
+
 }

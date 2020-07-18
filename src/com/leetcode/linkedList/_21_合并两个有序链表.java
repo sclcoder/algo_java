@@ -7,34 +7,52 @@ package com.leetcode.linkedList;
  * 输出：1->1->2->3->4->4
  */
 public class _21_合并两个有序链表 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) {
-            val = x;
-        }
-    }
 
     /**
-     * 创建一个新的链表,将两个链表的比较结果按顺序存到新链表中
-     * 思路: 比较两个链表的大小,依次进入新链表中
-     * 第一次没写好原因:思路是对的,但是想多了,复制了l1,l2中的值创建新链表
+     * 迭代的解法
+    */
+    public ListNode mergeTwoLists1(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode();
+        ListNode tail  = dummy;
+        ListNode cur1 = l1;
+        ListNode cur2 = l2;
+        while (cur1 != null && cur2 != null){
+
+            if (cur1.val <= cur2.val){
+                tail.next = cur1;
+                tail = cur1;
+                cur1 = cur1.next;
+            } else {
+                tail.next = cur2;
+                tail = cur2;
+                cur2 = cur2.next;
+            }
+        }
+        tail.next = cur1 != null ? cur1 : cur2;
+        return dummy.next;
+    }
+
+
+    /**
+     * 递归法
+     *
+     * 1->2->4,
+     * 1->3->4
+     * 1->          0 l1  return 1-2-3-4-4  1-1-2-3-4-4
+     * 1->          1 l2  return 2-3-4-4  1-2-3-4-4
+     * 2->          2 l1  return 3->4->4  2-3-4-4
+     * 3->          3 l2  return 4->4    3->4->4
+     * 4->          4 l1  return l2的4   4->4
      */
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode l = new ListNode(0);
-        ListNode c = l;
-        while (l1 != null && l2 != null){
-            if (l1.val <= l2.val){
-                c.next = l1;
-                c = c.next;
-                l1 = l1.next;
-            } else {
-                c.next = l2;
-                c = c.next;
-                l2 = l2.next;
-            }
-
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+        if (l1.val <= l2.val){
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists1(l1,l2.next);
+            return l2;
         }
-        return l;
     }
 }

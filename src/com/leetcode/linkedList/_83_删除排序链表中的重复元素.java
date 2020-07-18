@@ -9,14 +9,6 @@ package com.leetcode.linkedList;
 
 
 public class _83_删除排序链表中的重复元素 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) {
-            val = x;
-        }
-    }
-
     /**
      * 我的写法竟然和官方一模一样 哈哈哈
      */

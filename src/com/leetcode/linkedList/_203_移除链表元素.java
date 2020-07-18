@@ -1,5 +1,6 @@
 package com.leetcode.linkedList;
 
+
 /** https://leetcode-cn.com/problems/remove-linked-list-elements/
  * 删除链表中等于给定值 val 的所有节点。
  * 示例:
@@ -7,41 +8,54 @@ package com.leetcode.linkedList;
  * 输出: 1->2->3->4->5
  */
 public class _203_移除链表元素 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) {
-            val = x;
-        }
-    }
-
     /**
-     * 遍历每个节点，遇到相等的节点删除
+     * 解法一 : 双指针 一个记录前一个节点 一个遍历链表
      */
-    public ListNode removeElements(ListNode head, int val) {
-        if (head == null) return head;
-        // 头结点的值与val不相等
+    public ListNode removeElements_common(ListNode head, int val) {
+
         if (head.val != val) {
-            ListNode p = head;
-            ListNode c = head.next;
-            while (c != null) {
-                if (c.val == val) {
-                    p.next = c.next;
-                    c = c.next;
+            ListNode pre = head;
+            ListNode cur = head;
+            while (cur != null) {
+                if (cur.val == val) {
+                    pre.next = cur.next;
+                    cur = cur.next;
                 } else {
-                    p = c;
-                    c = c.next;
+                    pre = cur;
+                    cur = cur.next;
                 }
             }
         } else {
-            // 头结点的值与val相等
             head = head.next;
-            if (head != null){
-               head = removeElements(head,val);
+            if (head != null) {
+                removeElements_common(head, val);
             }
         }
         return head;
     }
+
+    /**
+     * 双指针: 加上虚拟头节点
+     */
+
+    public ListNode removeElements_dummyhead(ListNode head, int val) {
+
+        ListNode dummyHead = new ListNode();
+        dummyHead.next = head;
+        ListNode prev = dummyHead;
+        ListNode cur = head;
+        while (cur != null) {
+            if (cur.val == val) {
+                prev.next = cur.next;
+                cur = cur.next;
+            } else {
+                prev = cur;
+                cur = cur.next;
+            }
+        }
+        return dummyHead.next;
+    }
+
 
     /**
      * 使用这种递归方式实现非常精巧？为什么我没有想到呢？ 下面来分析一下这种方式的思路
@@ -52,11 +66,12 @@ public class _203_移除链表元素 {
      */
     public ListNode removeElements1(ListNode head, int val) {
         if (head == null) return head;
-        head.next = removeElements1(head.next,val);
-       if (head.val == val){
-           return head.next;
-       } else {
-           return head;
-       }
+        head.next = removeElements1(head.next, val);
+        if (head.val == val) {
+            return head.next;
+        } else {
+            return head;
+        }
     }
 }
+

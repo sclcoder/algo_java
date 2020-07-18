@@ -1,7 +1,7 @@
 package com.leetcode.linkedList;
 
 /**
- * https://leetcode-cn.com/problems/intersection-of-two-linked-lists/
+ * https://leetcode-cn.com/problems/intersection-of-two-linked-lists-lcci/
  * 编写一个程序，找到两个单链表相交的起始节点。
  * 示例 1：
  *          4--------->1---------->8------->4------->5
@@ -35,49 +35,48 @@ package com.leetcode.linkedList;
  *     可假定整个链表结构中没有循环。
  *     程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
  */
-public class _160_相交链表 {
+public class _面试题0207_链表相交 {
 
     /**
      * 暴力法
      */
-    public ListNode getIntersectionNode_iterate(ListNode headA, ListNode headB) {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         ListNode curA = headA;
-        ListNode curB = headB;
-
         while (curA != null){
+            ListNode curB = headB;
             while (curB != null){
-                if (curA == curB) return curA;
-                curB = curB.next;
+                if (curA.equals(curB)) return curA;
+                curB =  curB.next;
             }
-            curB = headB;
             curA = curA.next;
-
         }
         return null;
     }
 
-
-
-
-    /**
-     *  没有好的思路，完全参照高票解法:  此解法很是巧妙啊啊啊啊啊啊啊啊
-     *  思路:
-     *  定义两个指针, 第一轮让两个到达末尾的节点指向另一个链表的头部,
-     *  最后如果相遇则为交点(在第一轮移动中恰好抹除了长度差)两个指针等于移动了相同的距离, 有交点就返回, 无交点就是各走了两条指针的长度
-     */
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        if (headA == null || headB == null) return null;
-        ListNode Pa = headA, Pb = headB;
         /**
-         * 在这里第一轮体现在pA和pB第一次到达尾部会移向另一链表的表头, 而第二轮体现在如果pA或pB相交就返回交点,
-         * 不相交最后就是null==null
-         *  1.如果长度相同，且没有交点，在循环到第一轮末尾时，pA和pB会同时为null，这时就相等退出了。
-         *  2.如果长度不同，没有交点，会在第二轮末尾同时为null，相等退出。
+         * 双指针法
          */
-        while (Pa != Pb){
-            Pa = (Pa == null ? headB : Pa.next);
-            Pb = (Pb == null ? headA : Pb.next);
+    public ListNode getIntersectionNode_best(ListNode headA, ListNode headB) {
+        ListNode curA = headA;
+        ListNode curB = headB;
+
+        /**
+         * 如果两者不相交 最后 curA == null == curB 也会结束循环
+         */
+        while (curA != curB){
+
+            if (curA != null){
+                curA = curA.next;
+            } else {
+                curA = headB;
+            }
+
+            if (curB != null){
+                curB = curB.next;
+            } else {
+                curB = headA;
+            }
         }
-        return Pa;
+        return curA;
     }
 }

@@ -18,11 +18,7 @@ package com.leetcode.linkedList;
  */
 
 public class _876_链表的中间结点 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) { val = x; }
-    }
+
     class Solution {
         public ListNode middleNode(ListNode head) {
             // 注意：将快慢指针都指向头节点，可以避免奇数偶数个节点判断的问题

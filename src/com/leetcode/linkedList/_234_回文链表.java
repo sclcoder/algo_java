@@ -14,18 +14,114 @@ package com.leetcode.linkedList;
  * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
  */
 
+import java.util.Stack;
+
 /**
  * 之前看过此题的思路：利用快慢指针
  *
  */
 public class _234_回文链表 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) {
-            val = x;
+
+    /**
+     * 借用栈
+     */
+    public boolean isPalindrome_stack(ListNode head) {
+        Stack<Integer> stack = new Stack<>();
+        ListNode cur = head;
+        while (cur != null){
+            stack.add(cur.val);
+            cur = cur.next;
         }
+        cur = head;
+        while (!stack.isEmpty() && cur != null){
+            if (cur.val != stack.pop()) return false;
+            cur = cur.next;
+        }
+        return true;
     }
+
+    /**
+     * 翻转链表
+     *
+     * 查找中间节点,中间节点的查找方案如下
+     * 1->2->3->4->5->6->null  偶数找到 4
+     * 1->2->3->4->5->null     奇数找到 3
+     *
+     * 讨论:根据上述中间节点的查找。可以通过中间节点将链表分为左右两部分
+     * 左边 [0,mid)   右边 [mid,last]
+     *
+     * 将右边链表翻转后
+     * 1->2->3->4->5->6->null的结构变为
+     * 1->2->3-> 4 <-5<-6
+     *           |
+     *          null
+     *
+     * 1->2->3->4->5->null的结构变为
+     * 1->2->3<-4<-5
+     *       |
+     *      null
+     *
+     * 同时遍历左右两部分即可，如果是回文链表，右边链表遍历时最终指向null即结束
+     *
+     */
+    public boolean isPalindrome_reverse(ListNode head) {
+        /**
+         * midNode属于右边链表
+         */
+        ListNode midNode = mid(head);
+        ListNode lhead = head;
+        ListNode rhead = reverse(midNode);
+
+        while (rhead != null){
+            if (rhead.val != lhead.val) return false;
+            rhead = rhead.next;
+            lhead = lhead.next;
+        }
+        return true;
+    }
+
+    /**
+     * 获取中间节点
+     * @param head 链表的头节点
+     * @return 链表的中间节点
+     */
+    public ListNode mid(ListNode head){
+        ListNode fast =  head;
+        ListNode slow = head;
+        while (fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    /**
+     * 翻转链表
+     * @param head 目标链表的头节点
+     * @return 翻转后链表的头节点
+     */
+    public ListNode reverse(ListNode head){
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode temp = head.next;
+            head.next = newHead;
+            newHead = head;
+            head = temp;
+        }
+        return newHead;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 在处理奇数、偶数个节点上还不够优雅，应该有改进方法
@@ -83,7 +179,7 @@ public class _234_回文链表 {
         }
 
         /** 翻转右半边
-         * 奇数  1 2 3 2 1
+         * 奇数  1 2 3 4 5
          * 左边 1->2->3->null  右边 5->4->3->null
          * 偶数  1 2 3 4 5 6
          * 左边 1->2->3->4->null  右边 6->5->4->null

@@ -1,7 +1,4 @@
 package com.leetcode.linkedList;
-
-import com.algo.s03_LinkList.List;
-
 /**
  * https://leetcode-cn.com/problems/reverse-linked-list/
  * 反转一个单链表。
@@ -15,13 +12,6 @@ import com.algo.s03_LinkList.List;
  * 你可以迭代或递归地反转链表。你能否用两种方法解决这道题？
  */
 public class _206_反转链表 {
-    public class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) {
-            val = x;
-        }
-    }
 
     // 非递归
     public ListNode reverseList1(ListNode head) {
@@ -37,7 +27,7 @@ public class _206_反转链表 {
         }
         return newNode;
     }
-    // 递归
+
 
     /** 官方解答
      * 递归版本稍微复杂一些，其关键在于反向工作。假设列表的其余部分已经被反转，现在我该如何反转它前面的部分？假设列表为：n1 → … → nk-1 → nk → nk+1 → … → nm → Ø
@@ -49,14 +39,13 @@ public class _206_反转链表 {
      * @param head
      * @return
      */
-    public ListNode reversiList2(ListNode head){
-        if (head == null || head.next == null){
-            return head;
-        }
-        ListNode newNode = reversiList2(head.next);
+    public ListNode reverseList2(ListNode head) {
+        // head == null 说明上层递归调用是最后一个节点。head.next == null 说明上层递归调用的节点是倒数第二个节点
+        // 因为需要通过head.next.next来翻转，所以必须保证倒数第二个节点时就结束递归
+        if (head == null || head.next == null) return head;
+        ListNode newHead = reverseList2(head.next);
         head.next.next = head;
         head.next = null;
-        // 翻转好的节点
-        return newNode;
+        return newHead;
     }
 }
