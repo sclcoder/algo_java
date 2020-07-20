@@ -1,7 +1,7 @@
 package com.leetcode.linkedList.list;
 
-import com.leetcode.common.Asserts;
 import com.leetcode.linkedList.common.List;
+import com.tool.common.Asserts;
 
 /**
  * 各种测试用例

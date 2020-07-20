@@ -1,6 +1,7 @@
 package com.leetcode.binaryTree.test;
-import com.leetcode.binaryTree.com.mj.printer.BinaryTrees;
-import com.leetcode.binaryTree.common.BinarySearchTree;
+
+import com.tool.binaryTree.printer.BinaryTrees;
+import com.tool.binaryTree.common.BinarySearchTree;
 
 import java.util.Random;
 

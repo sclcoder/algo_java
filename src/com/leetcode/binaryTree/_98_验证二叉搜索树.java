@@ -1,6 +1,6 @@
 package com.leetcode.binaryTree;
 
-import com.algo.s04_Stack.Stack;
+import com.ds_algo.d_stack.Stack;
 
 /**
  * 98. 验证二叉搜索树
