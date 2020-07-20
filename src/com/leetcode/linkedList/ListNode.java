@@ -5,4 +5,9 @@ package com.leetcode.linkedList;
      public   ListNode next;
      public ListNode() {}
      public ListNode(int x) { val = x; }
+
+     @Override
+     public String toString() {
+         return val + "->" + next;
+     }
  }

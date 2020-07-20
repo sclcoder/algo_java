@@ -34,6 +34,7 @@ public class _109将有序链表转为二叉搜索树 {
          * 当只有有个节点时 mid == head。在查找中间节点的函数中总是返回head,这里会造成死循环
          */
         if (mid == head) return root;
+
         root.left = sortedListToBST(head);
         root.right = sortedListToBST(mid.next);
         return root;
@@ -53,6 +54,9 @@ public class _109将有序链表转为二叉搜索树 {
             prev = slow;
             slow = slow.next;
         }
+        /**
+         * 这个思路也是自己想出来的奥， 和官方一个样子
+         */
         if (prev != null){
             prev.next = null; /// 将左右两部分链表切割开
         }
