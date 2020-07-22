@@ -6,8 +6,8 @@ import java.text.DecimalFormat;
 
 public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T>> {
     protected T[] array;
-    private int compareCount;
-    private int swapCount;
+    private long compareCount;
+    private long swapCount;
     private long time;
     private DecimalFormat fmt = new DecimalFormat("#.00");
 
@@ -60,9 +60,9 @@ public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T
     public int compareTo(Sort o) {
         int result = (int)(time - o.time);
         if (result != 0) return result;
-        result = swapCount - o.swapCount;
+        result = (int) (swapCount - o.swapCount);
         if (result != 0) return result;
-        result = compareCount - o.compareCount;
+        result = (int)(compareCount - o.compareCount);
         return result;
     }
 
@@ -100,7 +100,7 @@ public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T
     }
 
 
-    private String numberString(int number) {
+    private String numberString(long number) {
         if (number < 10000) return "" + number;
 
         if (number < 100000000) return fmt.format(number / 10000.0) + "万";

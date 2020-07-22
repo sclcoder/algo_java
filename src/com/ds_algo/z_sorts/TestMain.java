@@ -10,16 +10,22 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        Integer[] array = Integers.random(1000,1,2000);
 //        Integer[] array = Integers.same(10000000,0);
+//        Integer[] array = Integers.ascOrder(0,10000);
+//        Integer[] array = Integers.descOrder(0,10000);
+//        Integer[] array = Integers.centerAscOrder(0,10000,5000);
+        Integer[] array = Integers.random(200000,1,200000);
+
+//        System.out.println("排序前" + Arrays.toString(array));
         testSorts(array,
-                new BubbleSort(),
-                new SelectSort(),
-                new InsertSort(),
+//                new BubbleSort(),
+//                new SelectSort(),
+//                new InsertSort(),
                 new HeapSort(),
-                new MergeSort(),
-                new QuickSort()
-        );
+                new ShellSort(),
+                new QuickSort(),
+                new MergeSort()
+                );
     }
 
     private static void testSorts(Integer[] array , Sort...sorts){
@@ -29,6 +35,7 @@ public class TestMain {
              */
             Integer[] newArray = Integers.copy(array);
             sort.sort(newArray);
+//            System.out.println("排序后" + Arrays.toString(newArray));
             Asserts.test(Integers.isAscOrder(newArray));
         }
 
@@ -40,5 +47,8 @@ public class TestMain {
         for (Sort sort : sorts) {
             System.out.println(sort);
         }
+
+        System.out.println("------------排序正确-----------");
+
     }
 }
