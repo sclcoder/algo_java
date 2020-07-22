@@ -1,4 +1,6 @@
-package com.ds_algo.z_sorts;
+package com.ds_algo.z_sorts.cmp;
+
+import com.ds_algo.z_sorts.Sort;
 
 /**
  * 堆排序: 对选择排序的一种优化，将给定的数据堆化处理，依次处理堆顶元素(最大值)
@@ -21,7 +23,7 @@ package com.ds_algo.z_sorts;
  *
  *
  */
-public class HeapSort extends Sort{
+public class HeapSort<T extends Comparable<T>> extends Sort<T> {
 
     private int heapSize;
     @Override
@@ -61,7 +63,7 @@ public class HeapSort extends Sort{
      * @param index 要下滤的位置
      */
     public void siftDown(int index){
-        Integer element = array[index];
+        T element = array[index];
 
         /**
          * 只有有子节点的index才能下滤
@@ -73,7 +75,7 @@ public class HeapSort extends Sort{
              */
             // 左节点
             int childIndex = (index << 1) + 1;
-            Integer childElement = array[childIndex];
+            T childElement = array[childIndex];
 
             int rightIndex = childIndex+1;
             if (rightIndex < heapSize){ // 有右节点

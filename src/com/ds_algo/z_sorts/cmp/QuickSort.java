@@ -1,7 +1,9 @@
-package com.ds_algo.z_sorts;
+package com.ds_algo.z_sorts.cmp;
 
 
-public class QuickSort extends Sort{
+import com.ds_algo.z_sorts.Sort;
+
+public class QuickSort<T extends Comparable<T>> extends Sort<T> {
     /**
      * 快速排序原理: 很简单的不要忌惮
      *  6 8 9 4 9 8 2 3 7  以6为轴点
@@ -74,7 +76,7 @@ public class QuickSort extends Sort{
         // 随机选择轴点
          swap(begin , begin + (int)Math.random() * (end - begin));
         // 备份轴点数据
-        Integer pivot = array[begin];
+        T pivot = array[begin];
         end--; // end 指向最后一个元素
         /**
          * 标记位: true     代表从end处开始比较

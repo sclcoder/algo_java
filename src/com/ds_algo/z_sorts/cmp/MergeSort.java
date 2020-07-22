@@ -1,6 +1,8 @@
-package com.ds_algo.z_sorts;
+package com.ds_algo.z_sorts.cmp;
 
-public class MegerSort extends Sort{
+import com.ds_algo.z_sorts.Sort;
+
+public class MergeSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     protected void sort() {
         /**
@@ -27,8 +29,10 @@ public class MegerSort extends Sort{
      *
      */
     protected void merge(int begin, int mid, int end){
-
-        Integer[] tem = new Integer[end-begin];
+        /**
+         * 这么泛型 我也没看懂。。。
+         */
+        T[] tem = (T[]) new Comparable[end-begin];
         int ls = begin;
         int le = mid - 1;
         int rs = mid;
@@ -36,7 +40,10 @@ public class MegerSort extends Sort{
         int k = 0;
 
         while (ls <= le && rs <= re){
-            tem[k++] = cmp(ls, rs) < 0 ? array[ls++] :array[rs++];
+            /*
+               cmp(ls, rs) <= 0  会影响稳定性
+             */
+            tem[k++] = cmp(ls, rs) <= 0 ? array[ls++] :array[rs++];
         }
 
         while (ls <= le){

@@ -1,6 +1,8 @@
-package com.ds_algo.z_sorts;
+package com.ds_algo.z_sorts.cmp;
 
-public class SelectSort extends Sort{
+import com.ds_algo.z_sorts.Sort;
+
+public class SelectSort<T extends Comparable<T>> extends Sort<T> {
     @Override
     protected void sort() {
         int length = array.length;

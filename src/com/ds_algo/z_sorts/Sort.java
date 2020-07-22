@@ -1,10 +1,11 @@
 package com.ds_algo.z_sorts;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
+import com.ds_algo.z_sorts.cmp.SelectSort;
 
-public abstract class Sort {
-    protected Integer[] array;
+import java.text.DecimalFormat;
+
+public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T>> {
+    protected T[] array;
     private int compareCount;
     private int swapCount;
     private long time;
@@ -15,7 +16,7 @@ public abstract class Sort {
      * 非抽象方法: 子类可以直接调用
      * @param array
      */
-    public void sort(Integer[] array){
+    public void sort(T[] array){
         if (array == null || array.length <2) return;
         this.array = array;
         long begin = System.currentTimeMillis();
@@ -24,7 +25,7 @@ public abstract class Sort {
     }
 
     public void swap(int i1, int i2){
-        Integer tem =array[i1];
+        T tem =array[i1];
         array[i1] = array[i2];
         array[i2] = tem;
         swapCount++;
@@ -37,12 +38,12 @@ public abstract class Sort {
      */
     public int cmp(int i1, int i2){
         compareCount++;
-        return array[i1] - array[i2];
+        return array[i1].compareTo(array[i2]);
     }
 
-    public int cmpElement(Integer v1, Integer v2){
+    public int cmpElement(T v1, T v2){
         compareCount++;
-        return v1 - v2;
+        return v1.compareTo(v2);
     }
 
 
@@ -51,17 +52,51 @@ public abstract class Sort {
      */
     protected abstract void sort();
 
+    /**
+     * 实现Comparable接口
+     * 自定义 Sort对象的排序
+     */
+    @Override
+    public int compareTo(Sort o) {
+        int result = (int)(time - o.time);
+        if (result != 0) return result;
+        result = swapCount - o.swapCount;
+        if (result != 0) return result;
+        result = compareCount - o.compareCount;
+        return result;
+    }
+
+
     @Override
     public String toString() {
         String timeStr = "耗时：" + (time / 1000.0) + "s(" + time + "ms)";
         String compareCountStr = "比较：" + numberString(compareCount);
         String swapCountStr = "交换：" + numberString(swapCount);
-//        String stableStr = "稳定性：" + isStable();
+        String stableStr = "稳定性：" + isStable();
         return "【" + getClass().getSimpleName() + "】\n"
+                + stableStr + " \t"
                 + timeStr + " \t"
                 + compareCountStr + "\t "
                 + swapCountStr + "\n"
                 + "------------------------------------------------------------------";
+    }
+
+    private boolean isStable() {
+//        if (this instanceof RadixSort) return true;
+//        if (this instanceof CountingSort) return true;
+//        if (this instanceof ShellSort) return false;
+        if (this instanceof SelectSort) return false;
+        Student[] students = new Student[20];
+        for (int i = 0; i < students.length; i++) {
+            students[i] = new Student(i * 10, 10);
+        }
+        sort((T[]) students);
+        for (int i = 1; i < students.length; i++) {
+            int score = students[i].score;
+            int prevScore = students[i - 1].score;
+            if (score != prevScore + 10) return false;
+        }
+        return true;
     }
 
 
