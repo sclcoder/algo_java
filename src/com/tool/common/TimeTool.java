@@ -19,7 +19,8 @@ public class TimeTool {
         task.execute();
         long end = System.currentTimeMillis();
         System.out.println("结束:" + fmt.format(new Date()));
-        double delta = (end - begin) / 1000;
+        // 这里除1000.0 而不是除 1000 。如果是1000那么结果会省略小数部分不精确
+        double delta = (end - begin) / 1000.0;
         System.out.println("耗时:" + delta + "秒");
         System.out.println("------------------------");
     }
