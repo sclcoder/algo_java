@@ -1,6 +1,6 @@
 package com.ds_algo.m_priorityQueue;
 
-import com.ds_algo.k_heap.BinaryHeap;
+import com.ds_algo.l_heap.BinaryHeap;
 
 import java.util.Comparator;
 
