@@ -1,5 +1,7 @@
-package com.leetcode.linkedList;
+package com.leetcode.priorityQueue;
 
+
+import com.leetcode.linkedList.ListNode;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
