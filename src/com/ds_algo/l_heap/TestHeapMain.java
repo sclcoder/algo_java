@@ -1,11 +1,11 @@
-package com.ds_algo.k_heap;
+package com.ds_algo.l_heap;
 
 import com.tool.binaryTree.printer.BinaryTrees;
 
 import java.util.Comparator;
 
 @SuppressWarnings("unchecked")
-public class TestMain {
+public class TestHeapMain {
 
     public static void main(String[] args) {
 //        test();
