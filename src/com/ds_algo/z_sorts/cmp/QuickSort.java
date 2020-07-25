@@ -66,7 +66,13 @@ public class QuickSort<T extends Comparable<T>> extends Sort<T> {
     }
 
     public void quickSort(int begin, int end){
-        if (end - begin < 2) return; /// 只有一个元素
+        /**
+         * 这里 end - begin < 1; 没有元素的条件
+         * 这样是为了在边界情况下，保证pivotIndex都有值，因为有的时候遇到变种快排时要用到pivotIndex
+         */
+        if (end - begin <= 0) return; /// 没有元素了
+//        if (end - begin < 1) return; /// 没有元素了
+//        if (end - begin < 2) return; /// 只有一个元素
         int pivotIndex = getPivotIndex(begin,end); // [begin, end]
         quickSort(begin,pivotIndex);
         quickSort(pivotIndex + 1,end);
