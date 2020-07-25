@@ -1,8 +1,5 @@
 package com.ds_algo.f_binarySearchTree;
 
-/**
- * Comparable java.util.lang中的接口
- */
 public class Person implements Comparable<Person> {
 	private int age;
 	private String name;
@@ -24,9 +21,6 @@ public class Person implements Comparable<Person> {
 	}
 
 	public int compareTo(Person e) {
-//		if (age > e.age) return 1;
-//		if (age < e.age) return -1;
-//		return 0;
 		return age - e.age;
 	}
 	
