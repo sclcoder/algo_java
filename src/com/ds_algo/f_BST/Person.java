@@ -1,4 +1,4 @@
-package com.ds_algo.f_binarySearchTree;
+package com.ds_algo.f_BST;
 
 public class Person implements Comparable<Person> {
 	private int age;

@@ -1,4 +1,4 @@
-package com.ds_algo.f_binarySearchTree;
+package com.ds_algo.f_BST;
 
 import com.tool.binaryTree.printer.BinaryTreeInfo;
 import java.util.LinkedList;

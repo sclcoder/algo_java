@@ -1,4 +1,4 @@
-package com.ds_algo.g_avlTree;
+package com.ds_algo.g_AVLTree;
 
 import com.tool.binaryTree.printer.BinaryTrees;
 

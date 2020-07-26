@@ -1,6 +1,6 @@
-package com.ds_algo.g_avlTree;
+package com.ds_algo.g_AVLTree;
 
-import com.ds_algo.f_binarySearchTree.BinarySearchTree;
+import com.ds_algo.f_BST.BST;
 
 import java.util.Comparator;
 
@@ -16,7 +16,7 @@ import java.util.Comparator;
  *           3.搜索、添加、删除时间复杂度 O(logn)
  *
  */
-public class AVLTree<E> extends BinarySearchTree<E> {
+public class AVLTree<E> extends BST<E> {
 
     public AVLTree(Comparator<E> comparator) {
         super(comparator);

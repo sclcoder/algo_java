@@ -1,4 +1,4 @@
-package com.ds_algo.f_binarySearchTree;
+package com.ds_algo.f_BST;
 
 import java.util.Comparator;
 
@@ -15,11 +15,11 @@ import java.util.Comparator;
  *  左右子树也是一个搜索二叉树
  */
 @SuppressWarnings({"unused","unchecked"})
-public class BinarySearchTree<E> extends BinaryTree<E> {
+public class BST<E> extends BinaryTree<E> {
 
     private final Comparator<E> comparator;
 
-    public BinarySearchTree(Comparator<E> comparator) {
+    public BST(Comparator<E> comparator) {
         /**
          * 二叉搜索树: 需要比较大小。这里使用比较器这种方式比使用遵守Comparable接口更加灵活。
          * 1、如果使用 <E extends Comparable> 这种方式, 那么BST存储一个元素对象时,就只能是从小到大或从大到小
@@ -29,7 +29,7 @@ public class BinarySearchTree<E> extends BinaryTree<E> {
         this.comparator = comparator;
     }
 
-    public BinarySearchTree() {
+    public BST() {
         this(null);
     }
 

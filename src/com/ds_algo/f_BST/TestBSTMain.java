@@ -1,4 +1,4 @@
-package com.ds_algo.f_binarySearchTree;
+package com.ds_algo.f_BST;
 
 import com.tool.binaryTree.printer.BinaryTreeInfo;
 import com.tool.binaryTree.printer.BinaryTrees;
@@ -26,7 +26,7 @@ public class TestBSTMain {
 
 
     public static void test(){
-        BinarySearchTree bst = new BinarySearchTree();
+        BST bst = new BST();
         int[] pool = new int[]{7,8,3,1,5,4,9,6};
         for (int i = 0; i < pool.length; i++) {
             bst.add(pool[i]);
@@ -59,7 +59,7 @@ public class TestBSTMain {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
@@ -72,14 +72,14 @@ public class TestBSTMain {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
-        BinarySearchTree<Person> bst1 = new BinarySearchTree<>();
+        BST<Person> bst1 = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst1.add(new Person(data[i]));
         }
 
         BinaryTrees.println(bst1);
 
-        BinarySearchTree<Person> bst2 = new BinarySearchTree<>(new Comparator<Person>() {
+        BST<Person> bst2 = new BST<>(new Comparator<Person>() {
             public int compare(Person o1, Person o2) {
                 return o2.getAge() - o1.getAge();
             }
@@ -91,7 +91,7 @@ public class TestBSTMain {
     }
 
     static void test3() {
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < 40; i++) {
             bst.add((int)(Math.random() * 100));
         }
@@ -170,7 +170,7 @@ public class TestBSTMain {
     }
 
     static void test5() {
-        BinarySearchTree<Person> bst = new BinarySearchTree<>();
+        BST<Person> bst = new BST<>();
         bst.add(new Person(10, "jack"));
         bst.add(new Person(12, "rose"));
         bst.add(new Person(6, "jim"));
@@ -183,7 +183,7 @@ public class TestBSTMain {
                 7, 4, 9, 2, 5
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
@@ -226,7 +226,7 @@ public class TestBSTMain {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
@@ -243,7 +243,7 @@ public class TestBSTMain {
                 7, 4, 9, 2, 1
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
@@ -256,7 +256,7 @@ public class TestBSTMain {
                 7, 4, 9, 2, 1
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BST<Integer> bst = new BST<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
