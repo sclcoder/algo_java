@@ -15,7 +15,7 @@ import java.util.Comparator;
  *  左右子树也是一个搜索二叉树
  */
 @SuppressWarnings({"unused","unchecked"})
-public class BinarySearchTree<E> extends BinaryTree {
+public class BinarySearchTree<E> extends BinaryTree<E> {
 
     private final Comparator<E> comparator;
 
@@ -34,10 +34,26 @@ public class BinarySearchTree<E> extends BinaryTree {
     }
 
 
+    /**
+     * 添加node之后的调整
+     * @param node 新添加的节点
+     */
+    protected void afterAdd(Node<E> node) { }
+    /**
+     * 删除node之后的调整
+     * @param node 删除的节点
+     */
+    protected void afterRemove(Node<E> node) { }
+
+    /**
+     * 添加新值
+     * @param element 值
+     */
     public void add(E element){
         elementEmptyCheck(element);
         if (root == null){
-            root = new Node<>(null, element);
+            root = createNode(null,element);
+            afterAdd(root);
         } else {
             Node<E> parent = root;
             Node<E> cur = root;
@@ -54,12 +70,13 @@ public class BinarySearchTree<E> extends BinaryTree {
                    return; // 退出循环,不然死循环
                }
             }
-            Node<E> node = new Node<>(parent, element);
+            Node<E> node = createNode(parent, element);
             if (res < 0){ // 添加到左节点
                 parent.left = node;
             } else { // 添加到右节点
                 parent.right = node;
             }
+            afterAdd(node);
         }
         size++;
     }
@@ -100,15 +117,21 @@ public class BinarySearchTree<E> extends BinaryTree {
 
         // 删除node节点（node的度必然是1或者0）
         Node<E> replacement = node.left != null ? node.left : node.right;
-        if (replacement == null){
+        if (replacement == null){ // node是度为0的节点
             if (node.parent == null){// node是叶子节点并且是根节点
                 root = null;
+                // 当被删除的节点的所有指向都处理了在处理后序操作
+                // 此时的node还保留着parent指针
+                afterRemove(node);
             } else {// node是叶子节点，但不是根节点
                 if (node.parent.left == node){
                     node.parent.left = null;
                 } else { // node == node.parent.right
                     node.parent.right = null;
                 }
+                // 当被删除的节点的所有指向都处理了在处理后序操作
+                // 此时的node还保留着parent指针
+                afterRemove(node);
             }
         } else { // node是度为1的节点
             // 更改parent
@@ -121,6 +144,9 @@ public class BinarySearchTree<E> extends BinaryTree {
             } else { // node == node.parent.right
                 node.parent.right = replacement;
             }
+            // 当被删除的节点的所有指向都处理了在处理后序操作
+            // 此时的node还保留着parent指针
+            afterRemove(node);
         }
 
     }

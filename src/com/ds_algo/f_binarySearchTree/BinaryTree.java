@@ -12,10 +12,10 @@ public class BinaryTree<E> implements BinaryTreeInfo {
 
     /// 内部节点类
     public static class Node<E>{
-        E val;
-        Node<E> parent;
-        Node<E> left;
-        Node<E> right;
+        public E val;
+        public Node<E> parent;
+        public Node<E> left;
+        public Node<E> right;
 
         public Node(Node<E> parent, E val) {
             this.parent = parent;
@@ -27,6 +27,19 @@ public class BinaryTree<E> implements BinaryTreeInfo {
 
         public boolean hasTwoChildren(){
             return this.left != null && this.right != null;
+        }
+        public boolean isLeftChild(){
+            if (parent != null){
+                return parent.left == this;
+            }
+            return false;
+        }
+
+        public boolean isRightChild(){
+            if (parent != null){
+                return parent.right == this;
+            }
+            return false;
         }
     }
 
@@ -47,6 +60,17 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         root = null;
         size = 0;
     }
+
+    /**
+     * 添加不同类型的Node<E>
+     * @param parent 父节点
+     * @param element 值
+     * @return 新创建的节点
+     */
+    protected Node<E> createNode(Node<E> parent, E element){
+        return new Node<>(parent, element);
+    }
+
     /**
      * 查找前驱节点
      * 前驱节点: 中序遍历时的前一个节点
@@ -425,11 +449,13 @@ public class BinaryTree<E> implements BinaryTreeInfo {
 
     @Override
     public Object string(Object node) {
-        BinaryTree.Node<E> newNode = (BinaryTree.Node<E>)node;
-        String parentString = "null";
-        if (newNode.parent != null){
-            parentString = newNode.parent.val.toString();
-        }
-        return ((Node<E>)node).val + "(p_" + parentString + ")";
+        return node;
+          // 测试BinarySearchTree时这么写
+//        BinaryTree.Node<E> newNode = (BinaryTree.Node<E>)node;
+//        String parentString = "null";
+//        if (newNode.parent != null){
+//            parentString = newNode.parent.val.toString();
+//        }
+//        return ((Node<E>)node).val + "(p_" + parentString + ")";
     }
 }
