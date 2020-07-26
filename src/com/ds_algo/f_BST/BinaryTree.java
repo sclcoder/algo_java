@@ -24,7 +24,6 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         public boolean isLeaf(){
             return this.left == null && this.right == null;
         }
-
         public boolean hasTwoChildren(){
             return this.left != null && this.right != null;
         }
@@ -40,6 +39,19 @@ public class BinaryTree<E> implements BinaryTreeInfo {
                 return parent.right == this;
             }
             return false;
+        }
+
+        // 兄弟节点
+        public Node<E> sibling() {
+            if (isLeftChild()) {
+                return parent.right;
+            }
+
+            if (isRightChild()) {
+                return parent.left;
+            }
+
+            return null;
         }
     }
 
