@@ -9,7 +9,7 @@ import java.util.Comparator;
  */
 
 /**
- *  * 二叉搜索树:
+ *  二叉搜索树:
  *  任意节点的值都大于(或小于)其左子树所有节点的值
  *  任意节点的值都小于(或大于)其右子树所有节点的值
  *  左右子树也是一个搜索二叉树
@@ -42,8 +42,9 @@ public class BST<E> extends BinaryTree<E> {
     /**
      * 删除node之后的调整
      * @param node 删除的节点
+     * @param replacement 替代被删除节点的节点
      */
-    protected void afterRemove(Node<E> node) { }
+    protected void afterRemove(Node<E> node, Node<E> replacement) { }
 
     /**
      * 添加新值
@@ -122,7 +123,7 @@ public class BST<E> extends BinaryTree<E> {
                 root = null;
                 // 当被删除的节点的所有指向都处理了在处理后序操作
                 // 此时的node还保留着parent指针
-                afterRemove(node);
+                afterRemove(node, null);
             } else {// node是叶子节点，但不是根节点
                 if (node.parent.left == node){
                     node.parent.left = null;
@@ -131,7 +132,7 @@ public class BST<E> extends BinaryTree<E> {
                 }
                 // 当被删除的节点的所有指向都处理了在处理后序操作
                 // 此时的node还保留着parent指针
-                afterRemove(node);
+                afterRemove(node, null);
             }
         } else { // node是度为1的节点
             // 更改parent
@@ -146,7 +147,7 @@ public class BST<E> extends BinaryTree<E> {
             }
             // 当被删除的节点的所有指向都处理了在处理后序操作
             // 此时的node还保留着parent指针
-            afterRemove(node);
+            afterRemove(node,replacement);
         }
 
     }

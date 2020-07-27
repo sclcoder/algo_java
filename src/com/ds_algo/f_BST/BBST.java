@@ -2,6 +2,10 @@ package com.ds_algo.f_BST;
 
 import java.util.Comparator;
 
+/**
+ * 平衡搜索二叉树
+ * @param <E> 泛型
+ */
 public class BBST<E> extends BST<E> {
     public BBST(Comparator<E> comparator) {
         super(comparator);

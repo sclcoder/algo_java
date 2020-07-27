@@ -15,11 +15,13 @@ public class TestRBTreeMain {
         }
 
 
-//        for (int i = 0; i < nums.length; i++) {
-//            avl.remove(nums[i]);
-//            System.out.println("【" +  nums[i] + "】");
-//            System.out.println("---------------------");
-//            BinaryTrees.println(avl);
-//        }
+        System.out.println("---------------------------------删除开始----------------------------");
+
+        for (int i = 0; i < nums.length; i++) {
+            rb.remove(nums[i]);
+            System.out.println("【" +  nums[i] + "】");
+            System.out.println("---------------------");
+            BinaryTrees.println(rb);
+        }
     }
 }

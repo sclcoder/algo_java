@@ -1,8 +1,6 @@
 package com.ds_algo.g_AVLTree;
 
 import com.ds_algo.f_BST.BBST;
-import com.ds_algo.f_BST.BST;
-
 import java.util.Comparator;
 
 /**
@@ -95,9 +93,10 @@ public class AVLTree<E> extends BBST<E> {
      *      该节点的高度可能会发生变化，可能会导致祖先节点的平衡因子发生改变，导致其失衡
      *
      * @param node 删除的节点
+     * @param replacement 删除的节点的替代节点
      */
     @Override
-    protected void afterRemove(Node<E> node) {
+    protected void afterRemove(Node<E> node, Node<E> replacement) {
         node = node.parent;
         while ( node != null){
             if (isBalance(node)){

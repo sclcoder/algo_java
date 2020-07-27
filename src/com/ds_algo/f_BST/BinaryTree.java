@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+/**
+ * 二叉树
+ * @param <E> 泛型
+ */
 @SuppressWarnings({"unused","unchecked"})
 public class BinaryTree<E> implements BinaryTreeInfo {
     protected Node<E> root;

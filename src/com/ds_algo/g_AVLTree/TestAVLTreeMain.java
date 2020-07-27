@@ -15,12 +15,13 @@ public class TestAVLTreeMain {
             BinaryTrees.println(avl);
         }
 
+        System.out.println("---------------------------------删除开始----------------------------");
 
-//        for (int i = 0; i < nums.length; i++) {
-//            avl.remove(nums[i]);
-//            System.out.println("【" +  nums[i] + "】");
-//            System.out.println("---------------------");
-//            BinaryTrees.println(avl);
-//        }
+        for (int i = 0; i < nums.length; i++) {
+            avl.remove(nums[i]);
+            System.out.println("【" +  nums[i] + "】");
+            System.out.println("---------------------");
+            BinaryTrees.println(avl);
+        }
     }
 }
