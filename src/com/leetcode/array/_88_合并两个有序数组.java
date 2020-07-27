@@ -1,4 +1,4 @@
-package com.interviewCode._01_数组_排序;
+package com.leetcode.array;
 
 /**
  * https://leetcode-cn.com/problems/merge-sorted-array/
