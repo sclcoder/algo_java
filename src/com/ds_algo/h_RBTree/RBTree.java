@@ -273,7 +273,7 @@ public class RBTree<E> extends BBST<E> {
                 // 中心节点继承parent颜色
                 color(sibling, colorOfNode(parent));
                 // 左右节点染成Black
-                black(sibling.left);
+                black(sibling.right);
                 black(parent);
             }
         }

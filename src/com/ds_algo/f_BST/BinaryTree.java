@@ -65,7 +65,7 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         /**
          * @return 如果返回true，就代表停止遍历
          */
-        abstract boolean visit(E element);
+        public abstract boolean visit(E element);
     }
 
     public int size(){
@@ -75,6 +75,10 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     public void clear(){
         root = null;
         size = 0;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     /**

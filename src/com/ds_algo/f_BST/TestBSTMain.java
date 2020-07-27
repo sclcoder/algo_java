@@ -36,22 +36,23 @@ public class TestBSTMain {
         System.out.println("tree height: " + bst.height());
         System.out.println("tree is Completed: " + bst.isCompletedBinaryTree());
 
-        BinaryTree.Visitor visitor = new BinaryTree.Visitor<Integer>() {
-            @Override
-            boolean visit(Integer element) {
-                if (element == 4){
-                    return true;
-                }
-                System.out.print(element + " ");
-                return false;
-            }
-        };
-
-        bst.inorderTravel(visitor);
-        System.out.println();
-        bst.preorderTravel(visitor);
-        System.out.println();
-        bst.postOrderTravel(visitor);
+        //TODO: 由于包的问题 和 f_set/TreeSet存在问题，无法同时通过编译，这里先注释掉
+//        BinaryTree.Visitor visitor = new BinaryTree.Visitor<Integer>() {
+//            @Override
+//            boolean visit(Integer element) {
+//                if (element == 4){
+//                    return true;
+//                }
+//                System.out.print(element + " ");
+//                return false;
+//            }
+//        };
+//
+//        bst.inorderTravel(visitor);
+//        System.out.println();
+//        bst.preorderTravel(visitor);
+//        System.out.println();
+//        bst.postOrderTravel(visitor);
     }
 
     static void test1() {
@@ -104,13 +105,14 @@ public class TestBSTMain {
         System.out.println("tree height: " + bst.height());
         System.out.println("tree is Completed: " + bst.isCompletedBinaryTree());
 
-        bst.inorderTravel(new BinaryTree.Visitor<Integer>() {
-            @Override
-            boolean visit(Integer element) {
-                System.out.print(element + "_");
-                return false;
-            }
-        });
+        //TODO: 由于包的问题 和 f_set/TreeSet存在问题，无法同时通过编译，这里先注释掉
+//        bst.inorderTravel(new BinaryTree.Visitor<Integer>() {
+//            @Override
+//            boolean visit(Integer element) {
+//                System.out.print(element + "_");
+//                return false;
+//            }
+//        });
     }
 
     static void test4() {
