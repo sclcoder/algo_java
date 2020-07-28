@@ -1,5 +1,6 @@
 package com.ds_algo.j_map;
 
+@SuppressWarnings("unused")
 public interface Map<K,V> {
     int size();
     boolean isEmpty();
@@ -11,7 +12,7 @@ public interface Map<K,V> {
     boolean containsValue(V value);
     void traversal(Visitor<K, V> visitor);
 
-    public static abstract class Visitor<K, V> {
+    abstract class Visitor<K, V> {
         boolean stop;
         public abstract boolean visit(K key, V value);
     }

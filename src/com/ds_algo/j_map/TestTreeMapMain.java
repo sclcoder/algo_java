@@ -28,9 +28,10 @@ public class TestTreeMapMain {
 
     static void test2() {
         String filePath1 = "/Users/tiny/Desktop/java_src/java/util";
-        String filePath = "/Users/tiny/Desktop/algo_java/src";
+        String filePath2 = "/Users/tiny/Desktop/algo_java/src";
+        String filePath3 = "/Users/tiny/Desktop/yunjifen/server_qifu";
 
-        FileInfo fileInfo = Files.read(filePath,
+        FileInfo fileInfo = Files.read(filePath3,
                 new String[]{"java"});
 
         System.out.println("文件数量：" + fileInfo.getFiles());
@@ -45,12 +46,12 @@ public class TestTreeMapMain {
             map.put(word, count);
         }
 
-//        map.traversal(new Map.Visitor<String, Integer>() {
-//            public boolean visit(String key, Integer value) {
-//                System.out.println(key + "_" + value);
-//                return false;
-//            }
-//        });
+        map.traversal(new Map.Visitor<String, Integer>() {
+            public boolean visit(String key, Integer value) {
+                System.out.println(key + "_" + value);
+                return false;
+            }
+        });
     }
 
     static void test3() {

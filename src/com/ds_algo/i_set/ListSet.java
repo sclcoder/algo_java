@@ -5,7 +5,7 @@ import com.ds_algo.c_linkList.List;
 
 public class ListSet<E> implements Set<E>{
     // 双向链表
-    private LinkedList<E> list = new LinkedList<>();
+    private final LinkedList<E> list = new LinkedList<>();
 
     @Override
     public int size() {
@@ -29,7 +29,7 @@ public class ListSet<E> implements Set<E>{
 
     /**
      * 集合相同的元素需要覆盖
-     * @param element
+     * @param element 值
      */
     @Override
     public void add(E element) {
