@@ -84,8 +84,10 @@ public class Files {
 		dirFile.listFiles(new FileFilter() {
 			public boolean accept(File subFile) {
 				String subFilepath = subFile.getAbsolutePath();
+//				System.out.println("subFilepath: " + subFilepath);
 				if (subFile.isDirectory()) {
 					info.append(read(subFilepath, extensions));
+//					System.out.println("info" + info.getContent());
 				} else if (extensions != null && extensions.length > 0) {
 					for (String extension : extensions) {
 						if (subFilepath.endsWith("." + extension)) {
