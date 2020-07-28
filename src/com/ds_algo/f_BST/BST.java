@@ -2,7 +2,7 @@ package com.ds_algo.f_BST;
 
 import java.util.Comparator;
 
-/**
+/*
  * 真二叉树：所有节点的度要么是0 要么是2
  * 满二叉树：所有节点的度要么是0 要么是2 且叶子节点在最后一层
  * 完全二叉树：叶子节点最后二层 且最后一层的叶子节点左对齐
@@ -20,7 +20,7 @@ public class BST<E> extends BinaryTree<E> {
     private final Comparator<E> comparator;
 
     public BST(Comparator<E> comparator) {
-        /**
+        /*
          * 二叉搜索树: 需要比较大小。这里使用比较器这种方式比使用遵守Comparable接口更加灵活。
          * 1、如果使用 <E extends Comparable> 这种方式, 那么BST存储一个元素对象时,就只能是从小到大或从大到小
          * 因为在对象实现Comparable接口时,比较方式已经写死了。

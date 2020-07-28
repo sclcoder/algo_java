@@ -11,7 +11,7 @@ public abstract class AbstractList<T> implements List<T> {
     /**
      * 元素的数量
      *
-     * @return
+     * @return 元素的数量
      */
     public int size() {
         return size;
@@ -20,7 +20,7 @@ public abstract class AbstractList<T> implements List<T> {
     /**
      * 是否为空
      *
-     * @return
+     * @return 是否为空
      */
     public boolean isEmpty() {
         return size == 0;
@@ -30,8 +30,8 @@ public abstract class AbstractList<T> implements List<T> {
     /**
      * 是否包含某个元素
      *
-     * @param element
-     * @return
+     * @param element 元素值
+     * @return 是否包含
      */
     public boolean contains(T element) {
         return indexOf(element) != ELEMENT_NOT_FOUND;
@@ -40,7 +40,7 @@ public abstract class AbstractList<T> implements List<T> {
     /**
      * 添加元素到尾部
      *
-     * @param element
+     * @param element 尾部
      */
     public void add(T element) {
         add(size, element);
@@ -57,7 +57,7 @@ public abstract class AbstractList<T> implements List<T> {
 
     /**
      * 添加元素边界检查
-     * @param index
+     * @param index 索引
      */
     protected  void addRangeCheck(int index){
         if (index < 0 || index > size) {

@@ -2,7 +2,7 @@ package com.ds_algo.e_queue;
 
 import com.ds_algo.e_queue.circle.CircleQueue;
 import com.ds_algo.e_queue.circle.CircleDeque;
-
+@SuppressWarnings("unused")
 public class Main {
 
     public static void test1(){

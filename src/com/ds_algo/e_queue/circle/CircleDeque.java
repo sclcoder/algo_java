@@ -1,5 +1,5 @@
 package com.ds_algo.e_queue.circle;
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","unused","UnusedReturnValue"})
 public class CircleDeque<T> {
 	private int front;
 	private int size;
@@ -28,7 +28,7 @@ public class CircleDeque<T> {
 
 	/**
 	 * 从尾部入队
-	 * @param element
+	 * @param element 值
 	 */
 	public void enQueueRear(T element) {
 		ensureCapacity(size + 1);
@@ -104,7 +104,7 @@ public class CircleDeque<T> {
 	
 	/**
 	 * 保证要有capacity的容量
-	 * @param capacity
+	 * @param capacity 容量
 	 */
 	private void ensureCapacity(int capacity) {
 		int oldCapacity = elements.length;

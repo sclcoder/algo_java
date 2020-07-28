@@ -1,5 +1,6 @@
 package com.ds_algo.f_BST;
 
+@SuppressWarnings("unused")
 public class Person implements Comparable<Person> {
 	private int age;
 	private String name;

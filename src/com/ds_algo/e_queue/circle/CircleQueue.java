@@ -3,6 +3,7 @@ package com.ds_algo.e_queue.circle;
  * 使用数组实现循环队列
  * @param <T>
  */
+@SuppressWarnings({"unchecked","unused"})
 public class CircleQueue<T> {
     private int front; // 指向队头
     private int size;
@@ -43,7 +44,7 @@ public class CircleQueue<T> {
     public T deQueue(){
         T frontElement = elements[front];
         elements[front] = null;
-        /**
+        /*
          *         if (front + 1 < elements.length){
          *             front = front + 1;
          *         } else {

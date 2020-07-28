@@ -5,7 +5,7 @@ import com.tool.binaryTree.printer.BinaryTrees;
 import com.tool.common.file.Files;
 import java.util.Comparator;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings({"unused"})
 public class TestBSTMain {
     public static void main(String[] args) {
 //        test();
@@ -26,10 +26,10 @@ public class TestBSTMain {
 
 
     public static void test(){
-        BST bst = new BST();
+        BST<Integer> bst = new BST<>();
         int[] pool = new int[]{7,8,3,1,5,4,9,6};
-        for (int i = 0; i < pool.length; i++) {
-            bst.add(pool[i]);
+        for (int value : pool) {
+            bst.add(value);
         }
         BinaryTrees.println(bst);
 
@@ -56,37 +56,33 @@ public class TestBSTMain {
     }
 
     static void test1() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
         BST<Integer> bst = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst.add(data[i]);
+        for (Integer value : data) {
+            bst.add(value);
         }
 
         BinaryTrees.println(bst);
     }
 
     static void test2() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
         BST<Person> bst1 = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst1.add(new Person(data[i]));
+        for (Integer value : data) {
+            bst1.add(new Person(value));
         }
 
         BinaryTrees.println(bst1);
 
-        BST<Person> bst2 = new BST<>(new Comparator<Person>() {
-            public int compare(Person o1, Person o2) {
-                return o2.getAge() - o1.getAge();
-            }
-        });
-        for (int i = 0; i < data.length; i++) {
-            bst2.add(new Person(data[i]));
+        BST<Person> bst2 = new BST<>((o1, o2) -> o2.getAge() - o1.getAge());
+        for (Integer value : data) {
+            bst2.add(new Person(value));
         }
         BinaryTrees.println(bst2);
     }
@@ -181,13 +177,13 @@ public class TestBSTMain {
     }
 
     static void test6() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 5
         };
 
         BST<Integer> bst = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst.add(data[i]);
+        for (Integer value : data) {
+            bst.add(value);
         }
 
 //		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -224,13 +220,13 @@ public class TestBSTMain {
     }
 
     static void test7() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
         BST<Integer> bst = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst.add(data[i]);
+        for (Integer datum : data) {
+            bst.add(datum);
         }
 
         BinaryTrees.println(bst);
@@ -241,33 +237,33 @@ public class TestBSTMain {
     }
 
     static void test8() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 1
         };
 
         BST<Integer> bst = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst.add(data[i]);
+        for (Integer datum : data) {
+            bst.add(datum);
         }
         BinaryTrees.println(bst);
         System.out.println(bst.isCompletedBinaryTree());
     }
 
     static void test9() {
-        Integer data[] = new Integer[] {
+        Integer[] data = new Integer[] {
                 7, 4, 9, 2, 1
         };
 
         BST<Integer> bst = new BST<>();
-        for (int i = 0; i < data.length; i++) {
-            bst.add(data[i]);
+        for (Integer datum : data) {
+            bst.add(datum);
         }
         BinaryTrees.println(bst);
 
         bst.preorderTravel(new BinaryTree.Visitor<Integer>() {
             public boolean visit(Integer element) {
                 System.out.print(element + " ");
-                return element == 2 ? true : false;
+                return element == 2;
             }
         });
         System.out.println();
@@ -275,7 +271,7 @@ public class TestBSTMain {
         bst.inorderTravel(new BinaryTree.Visitor<Integer>() {
             public boolean visit(Integer element) {
                 System.out.print(element + " ");
-                return element == 4 ? true : false;
+                return element == 4;
             }
         });
         System.out.println();
@@ -283,7 +279,7 @@ public class TestBSTMain {
         bst.postOrderTravel(new BinaryTree.Visitor<Integer>() {
             public boolean visit(Integer element) {
                 System.out.print(element + " ");
-                return element == 4 ? true : false;
+                return element == 4;
             }
         });
         System.out.println();
@@ -291,7 +287,7 @@ public class TestBSTMain {
         bst.levelOrderTravel(new BinaryTree.Visitor<Integer>() {
             public boolean visit(Integer element) {
                 System.out.print(element + " ");
-                return element == 9 ? true : false;
+                return element == 9;
             }
         });
         System.out.println();

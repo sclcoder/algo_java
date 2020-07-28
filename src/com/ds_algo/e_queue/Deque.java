@@ -8,11 +8,12 @@ import com.ds_algo.e_queue.list.List;
  *
  * @param <T>
  */
+@SuppressWarnings("unused")
 public class Deque<T> {
     /**
      * 双向链表
      */
-    private List<T> list = new LinkedList<>();
+    private final List<T> list = new LinkedList<>();
 
     public int size() {
         return list.size();
@@ -24,7 +25,7 @@ public class Deque<T> {
 
     /**
      * 从尾部入队列
-     * @param element
+     * @param element 尾部
      */
     public void enQueueRear(T element) {
         // 添加到链表的尾部 add(size()-1,element)
@@ -39,7 +40,7 @@ public class Deque<T> {
 
     /**
      * 从头部入队列
-     * @param element
+     * @param element 元素
      */
     public void enQueueFront(T element) {
         // 添加到链表的头部
@@ -48,7 +49,7 @@ public class Deque<T> {
 
     /**
      * 从尾部出队列
-     * @return
+     * @return 尾部
      */
     public T deQueueRear() {
         return list.remove(list.size()-1);
@@ -56,7 +57,7 @@ public class Deque<T> {
 
     /**
      * 头部
-     * @return
+     * @return 头部
      */
     public T front() {
         return list.get(0);
@@ -64,7 +65,7 @@ public class Deque<T> {
 
     /**
      * 尾部
-     * @return
+     * @return 尾部
      */
     public T rear() {
         return list.get(list.size()-1);

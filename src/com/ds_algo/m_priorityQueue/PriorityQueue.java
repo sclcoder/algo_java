@@ -11,12 +11,12 @@ import java.util.Comparator;
  *
  * 实现的数据结构 : 二叉堆
  */
-
+@SuppressWarnings("unused")
 public class PriorityQueue<E> {
-    private BinaryHeap<E> heap;
+    private final BinaryHeap<E> heap;
 
     public PriorityQueue(Comparator<E> comparator){
-        this.heap = new BinaryHeap<E>(comparator);
+        this.heap = new BinaryHeap<>(comparator);
     }
     public PriorityQueue() {
         this(null);

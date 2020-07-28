@@ -6,9 +6,7 @@ package com.ds_algo.e_queue.list;
  * @param <T>
  */
 public interface List<T> {
-
-    public static final int ELEMENT_NOT_FOUND = -1;
-
+    int ELEMENT_NOT_FOUND = -1;
     /**
      * 清除所有元素
      */
@@ -17,37 +15,37 @@ public interface List<T> {
     /**
      * 元素的数量
      *
-     * @return
+     * @return 元素的数量
      */
     int size();
 
     /**
      * 是否为空
      *
-     * @return
+     * @return 是否为空
      */
     boolean isEmpty();
 
     /**
      * 是否包含某个元素
      *
-     * @param element
-     * @return
+     * @param element 值
+     * @return 是否包含
      */
     boolean contains(T element);
 
     /**
      * 添加元素到尾部
      *
-     * @param element
+     * @param element 值
      */
     void add(T element);
 
     /**
      * 获取index位置的元素
      *
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 获取的值
      */
     T get(int index);
 
@@ -71,8 +69,8 @@ public interface List<T> {
     /**
      * 删除index位置的元素
      *
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 被删除的值
      */
     T remove(int index);
 

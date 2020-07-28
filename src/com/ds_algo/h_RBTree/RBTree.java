@@ -23,6 +23,7 @@ import java.util.Comparator;
  *           添加 ：新添加的元素必定添加到叶子节点。
  *           删除 ：真正被删除的节点都在叶子节点。
  */
+@SuppressWarnings({"unused","UnusedReturnValue"})
 public class RBTree<E> extends BBST<E> {
     public static final boolean RED = false;
     public static final boolean BLACK = true;
@@ -44,7 +45,7 @@ public class RBTree<E> extends BBST<E> {
 
     @Override
     protected void afterAdd(Node<E> node) {
-        /**
+        /*
          * 4阶B树和红黑树可以完美对应
          * 添加红黑树节点一共有12中情况
          * 一、有4中情况满足红黑树的性质4 :  parent为Black

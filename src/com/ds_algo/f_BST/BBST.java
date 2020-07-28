@@ -6,6 +6,7 @@ import java.util.Comparator;
  * 平衡搜索二叉树
  * @param <E> 泛型
  */
+@SuppressWarnings("unused")
 public class BBST<E> extends BST<E> {
     public BBST(Comparator<E> comparator) {
         super(comparator);

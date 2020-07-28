@@ -2,7 +2,7 @@ package com.ds_algo.l_heap;
 
 import java.util.Comparator;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","unused"})
 public abstract class AbstractHeap<E> implements Heap<E>{
     protected int size;
     protected Comparator<E> comparator;

@@ -8,9 +8,10 @@ import com.ds_algo.e_queue.list.LinkedList;
  *
  * @param <T>
  */
+@SuppressWarnings("unused")
 public class Queue<T> {
 
-    private LinkedList<T> list = new LinkedList<>();
+    private final LinkedList<T> list = new LinkedList<>();
 
     public int size() {
         return list.size;
@@ -22,7 +23,7 @@ public class Queue<T> {
 
     /**
      * 每次都添加到链表的尾部,保证之前添加的在前面
-     * @param element
+     * @param element 值
      */
     public void enQueue(T element) {
         list.add(element);

@@ -56,8 +56,8 @@ public class LinkedList<T> extends AbstractList<T> {
     /**
      * 获取index位置的元素
      *
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 获取的值
      */
     @Override
     public T get(int index) {
@@ -89,7 +89,7 @@ public class LinkedList<T> extends AbstractList<T> {
     @Override
     public void add(int index, T element) {
         addRangeCheck(index);
-        /**
+        /*
          * 边界条件: first和last指针需要更新的位置
          */
         if (index == size) { // 向最后添加元素--last指针需要更新
@@ -119,8 +119,8 @@ public class LinkedList<T> extends AbstractList<T> {
     /**
      * 删除index位置的元素
      *
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 被删除的值
      */
     @Override
     public T remove(int index) {
@@ -181,7 +181,7 @@ public class LinkedList<T> extends AbstractList<T> {
         rangeCheck(index);
 
         if (index < (size >> 1)) { // 从前边开始查找
-            /**
+            /*
              * 注意边界: next的次数和index的值是一致的
              */
             Node<T> node = first;

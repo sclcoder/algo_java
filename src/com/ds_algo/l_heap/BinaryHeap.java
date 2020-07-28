@@ -2,6 +2,8 @@ package com.ds_algo.l_heap;
 
 
 import com.tool.binaryTree.printer.BinaryTreeInfo;
+
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -29,7 +31,7 @@ import java.util.Comparator;
  *
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked"})
 
 // 默认以大顶堆方式构建
 public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
@@ -45,10 +47,11 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
         } else {
             size = elements.length;
             int capacity = Math.max(elements.length, DEFAULT_CAPACITY);
-            this.elements = (E[]) new Object[capacity];
-            for (int i = 0; i < elements.length; i++) {
-                this.elements[i] = elements[i];
-            }
+//            this.elements = (E[]) new Object[capacity];
+//            for (int i = 0; i < elements.length; i++) {
+//                this.elements[i] = elements[i];
+//            }
+            this.elements = Arrays.copyOf(elements,capacity);
             heapify();
         }
     }
@@ -69,7 +72,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
      * 对数组进行大顶堆化处理
      */
     public void heapify(){
-        /**
+        /*
          * 采用自底向上的下滤
          * 步骤: 从后向前依次对非叶子节点进行下滤操作
          * 非叶子节点索引范围:  index < size/2
@@ -144,15 +147,15 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
     private void ensureCapacity(int capacity) {
         int oldCapacity = elements.length;
         if (capacity <= oldCapacity) return;
-        if (capacity > oldCapacity){
-            // 1.5倍
-            int newCapacity = oldCapacity + (oldCapacity>>1);
-            E[] newElements = (E[])new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newElements[i] = elements[i];
-            }
-            elements = newElements;
-        }
+        // 1.5倍
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+//        E[] newElements = (E[]) new Object[newCapacity];
+//        for (int i = 0; i < size; i++) {
+//            newElements[i] = elements[i];
+//        }
+//        elements = newElements;
+        //
+        elements = Arrays.copyOf(elements,newCapacity);
     }
 
 

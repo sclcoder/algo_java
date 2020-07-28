@@ -1,6 +1,5 @@
 package com.ds_algo.m_priorityQueue;
 
-import java.util.Comparator;
 
 public class Person implements Comparable<Person> {
     int age;
