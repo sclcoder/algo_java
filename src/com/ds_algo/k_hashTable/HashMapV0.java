@@ -1,31 +1,34 @@
-package com.ds_algo.j_map;
+package com.ds_algo.k_hashTable;
 
-import java.util.*;
+import com.ds_algo.j_map.Map;
+import com.tool.binaryTree.printer.BinaryTreeInfo;
+import com.tool.binaryTree.printer.BinaryTrees;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Queue;
+
 
 /**
- * 使用红黑树实现的Map
- * @param <K> key泛型
- * @param <V> value泛型
+ * 版本0: 不能扩容
+ * 哈希表实现Map:
+ * 1. 哈希算法的实现
+ * 2. 每个桶存放的为红黑树节点
+ * 3. 注意 对顺序没有要求
  */
-@SuppressWarnings({"unused","unchecked","UnusedReturnValue"})
-public class TreeMap<K,V> implements Map<K,V>{
+@SuppressWarnings({"unchecked","unused"})
+public class HashMapV0<K,V> implements Map<K,V>{
     private static final boolean RED = false;
     private static final boolean BLACK = true;
-    private Node<K,V> root;
     private int size;
-    private final Comparator<K> comparator;
-
-    public TreeMap(){
-        this(null);
+    private final Node<K,V>[] table;
+    public HashMapV0(){
+        // 容量设计为2^n 方便使用&与key的hashCode进行约束
+        int DEFAULT_CAPACITY = 1 << 4;
+        table = new Node[DEFAULT_CAPACITY];
     }
 
-    public TreeMap(Comparator<K> comparator) {
-        this.comparator = comparator;
-    }
-
-    /*
-     * 重写接口方法
-     */
     @Override
     public int size() {
         return size;
@@ -38,26 +41,78 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public void clear() {
-        root = null;
+        if (size == 0) return;
+        Arrays.fill(table, null);
         size = 0;
     }
 
+    /* ———————————————两个查找位置的核心函数—————————————————————— */
+
+    /* 注意: 判断两个key是否相等的唯一标准equals,其他的相等都不能作为两个key相等的充分条件 */
     @Override
     public V put(K key, V value) {
-        keyNotNullCheck(key);
-
+        int index = index(key);
+        // 取出index位置的红黑树根节点
+        Node<K,V> root = table[index];
         if (root == null){
             root = createNode(key,value,null);
-            afterPut(root);
+            table[index] = root;
             size++;
+            afterPut(root);
             return null;
         } else {
             Node<K,V> parent = root;
             Node<K,V> cur = root;
+            // 需要通过key来进行查找
+            K k1 = key;
+            /// 之前简单以为在同一个桶中hash值就一样了。大错特错: hash值不一样，其index可能一样，最终在同一个桶中
+//            int h1 = cur.hash  // 之前这里出错了。。。找了好久的bug。。。草
+            int h1 = k1 == null ? 0 : k1.hashCode();
+            // 比较结果
             int res = 0;
+            // 记录扫描时的结果
+            Node<K,V> scanResult;
+            // 标记递过程中是否已经搜索过-避免大量的重复搜索，优化搜索过程
+            boolean searched = false;
             while (cur != null){
                 parent = cur;
-                res = compare(key,parent.key);
+                K k2 = cur.key;
+                int h2 = cur.hash;
+                // 注意: 这里不使用h1-h2是为了防止int类型溢出造成错误结果。
+                if (h1 < h2){
+                    res = -1; // 标记为 向右查找 cur = cur.left;
+                } else if (h1 > h2){
+                    res = 1;  // 标记为 向左查找 cur = cur.right;
+                } else if (Objects.equals(k1,k2)){
+                    /* 判断两个key是否相等的唯一标准equals,其他的相等都能算两个key相等 */
+                    // key的哈希值相等且equals。覆盖旧值
+                    res = 0; // 标记为 找到 : 覆盖旧值
+                } else if (k1 != null && k2!= null &&
+                           k1.getClass() == k2.getClass() &&
+                           k1 instanceof Comparable &&
+                           (res = ((Comparable) k1).compareTo(k2)) != 0){ // 具备可比较性
+                     // 注意：compare的相等不能作为判断key相等的标准，标准只有equals这一个
+                     // res不为0有前进方向,do nothing
+                } else if (!searched){ // 没有搜索过
+                    // key的hash相等、不equals、不具备可比较性
+                    // 扫描来查看是否已经存在这个key
+                    if (cur.left != null && (scanResult = node(cur.left, k1)) != null ||
+                        cur.right != null && (scanResult = node(cur.right, k1)) != null){
+                        // 已经存在这个key(k1)
+                        cur = scanResult; // 为了后序覆盖scanResult这个值
+                        res = 0;
+                    } else { // 说明在cur以后的节点没有这k1
+                        // 说明已经将所有子树扫描过了，下次递归时没必要进行再次扫描
+                        searched = true;
+                        // 那就可以放心的使用内存地址的比较来确定添加Node的方向
+                        // 这里相减： 因为内存地址都是正数肯定不会溢出的放心减
+                        res = System.identityHashCode(k1) - System.identityHashCode(k2);
+                    }
+                } else {
+                    // 之前的扫描说明没有相等的key,可以直接使用内存地址的大小决定前进方向
+                    res = System.identityHashCode(k1) - System.identityHashCode(k2);
+                }
+
                 if (res < 0){
                     cur = cur.left;
                 } else if (res > 0){
@@ -66,6 +121,7 @@ public class TreeMap<K,V> implements Map<K,V>{
                     V oldValue = cur.value;
                     cur.key = key;
                     cur.value = value;
+                    cur.hash = h1;
                     return oldValue; // 退出循环,不然死循环
                 }
             }
@@ -75,16 +131,61 @@ public class TreeMap<K,V> implements Map<K,V>{
             } else { // 添加到右节点
                 parent.right = node;
             }
-            afterPut(node);
             size++;
+            afterPut(node);
             return null;
         }
+    }
+
+
+    /**
+     * 在红黑树中递归查找key1对应的节点
+     * @param node 查找的起始节点
+     * @param k1 给定的k1
+     * @return 找到的节点
+     */
+    private Node<K,V> node(Node<K,V> node, K k1){
+        // k1的hash值
+        int h1 = k1 == null ? 0 : k1.hashCode();
+
+        Node<K, V> result; // 存储查找结果
+
+        int cmp;
+        while (node != null) {
+            K k2 = node.key;
+            // k2的hash值
+            int h2 = node.hash;
+            // 先比较哈希值
+            if (h1 > h2) {
+                node = node.right;
+            } else if (h1 < h2) {
+                node = node.left;
+            } else if (Objects.equals(k1, k2)) {
+                // 两个key是否相等的唯一标准equals
+                return node;
+            } else if (k1 != null && k2 != null
+                    && k1.getClass() == k2.getClass()
+                    && k1 instanceof Comparable
+                    && (cmp = ((Comparable) k1).compareTo(k2)) != 0) {
+                // 两个key的hash值相等，但两个key不相等的情况: 那么先通过是否可Comparable来处理后向左和还是向右找的问题
+                // cmp相等的情况: 没法通过比较决定搜索方向了，只能扫描了
+                node = cmp > 0 ? node.right : node.left;
+            } else if (node.right != null &&  (result = node(node.right, k1)) != null) {
+                // 如果又不能Comparable: 那就没办法了，只能暴力扫描了，这里使用递归处理
+                return result;
+            } else if (node.left != null && (result = node(node.left, k1)) != null) {
+                return result;
+			} else {
+				return null;
+			}
+        }
+        return null;
     }
 
     @Override
     public V get(K key) {
         Node<K, V> node = node(key);
-        return node == null ? null : node.value;
+        return node != null ? node.value : null;
     }
 
     @Override
@@ -99,20 +200,22 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public boolean containsValue(V value) {
-        if (root == null) return false;
+        if (size == 0) return false;
         Queue<Node<K, V>> queue = new LinkedList<>();
-        queue.add(root);
-        while (!queue.isEmpty()){
-            Node<K,V> node = queue.poll();
+        for (int i = 0; i < table.length; i++) {
+            if (table[i] == null) continue;
 
-            if (valEquals(value, node.value)) return true;
+            queue.offer(table[i]);
+            while (!queue.isEmpty()) {
+                Node<K, V> node = queue.poll();
+                if (Objects.equals(value, node.value)) return true;
 
-            if (node.left != null) {
-                queue.offer(node.left);
-            }
-
-            if (node.right != null) {
-                queue.offer(node.right);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
             }
         }
         return false;
@@ -120,28 +223,100 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public void traversal(Visitor<K, V> visitor) {
-        if (visitor == null) return;
-        traversal(root,visitor);
+        if (size == 0 || visitor == null) return;
+
+        Queue<Node<K, V>> queue = new LinkedList<>();
+        for (int i = 0; i < table.length; i++) {
+            if (table[i] == null) continue;
+
+            queue.offer(table[i]);
+            while (!queue.isEmpty()) {
+                Node<K, V> node = queue.poll();
+                if (visitor.visit(node.key, node.value)) return;
+
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+        }
     }
 
+
+    public void print() {
+        if (size == 0) return;
+        for (int i = 0; i < table.length; i++) {
+            final Node<K, V> root = table[i];
+            System.out.println("【index = " + i + "】");
+            BinaryTrees.println(new BinaryTreeInfo() {
+                @Override
+                public Object string(Object node) {
+                    return node;
+                }
+
+                @Override
+                public Object root() {
+                    return root;
+                }
+
+                @Override
+                public Object right(Object node) {
+                    return ((Node<K, V>)node).right;
+                }
+
+                @Override
+                public Object left(Object node) {
+                    return ((Node<K, V>)node).left;
+                }
+            });
+            System.out.println("---------------------------------------------------");
+        }
+    }
+
+
+    /*-------------- 生成哈希表的索引函数 --------------*/
+
+    /**
+     * 根据key生成对应的索引（在桶数组中的位置）
+     * @param key key
+     * @return 该key生成的索引值
+     */
+    private int index(K key){
+        if (key == null) return 0;
+        int hashCode = key.hashCode();
+        return  (hashCode ^ (hashCode >>> 16)) & (table.length-1);
+    }
+
+    /**
+     * 根据node生成对应的索引（在桶数组中的位置）
+     * @param node node
+     * @return 该node生成的索引值
+     */
+    private int index(Node<K, V> node) {
+        // 为了避免多次计算node.key的hash值,将其hash值记录在node节点中
+        // 并不确定外界计算的hash值给定的比较合理，这里进行扰动计算一下
+        return ((node.hash) ^ (node.hash >>> 16)) & (table.length-1);
+    }
+
+
+    /*-------------------- 查找节点的核心函数  ------------------*/
+    /**
+     * 根据key获取对应的Node
+     * @param key key
+     * @return Node
+     */
+    private Node<K,V> node(K key){
+        int index = index(key);
+        Node<K, V> root = table[index]; // 红黑树的节点
+        return  root == null ? null : node(root, key);
+    }
+
+
+    /*---------------------红黑树相关核心函数-------------------------------*/
 
     /*
-     * 核心函数
-     */
-    /**
-     * 中序遍历递归版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
-    private void traversal(Node<K,V> root, Visitor<K,V> visitor){
-        if (root == null || visitor.stop) return;
-        traversal(root.left,visitor);
-        if (visitor.stop) return;
-        visitor.stop = visitor.visit(root.key,root.value);
-        traversal(root.right,visitor);
-    }
-
-    /**
      * 删除节点
      * @param node 节点
      *
@@ -154,6 +329,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      *  3. 删除有度为2的节点
      */
     private V remove(Node<K,V> node){
+
         if (node == null) return null;
         size--;
         V oldValue = node.value;
@@ -164,15 +340,18 @@ public class TreeMap<K,V> implements Map<K,V>{
             // 用后继节点的值覆盖度为2的节点的值
             node.key = s.key;
             node.value = s.value;
+            node.hash = s.hash;
             // 删除后继节点
             node = s;
         }
 
         // 删除node节点（node的度必然是1或者0）
         Node<K,V> replacement = node.left != null ? node.left : node.right;
+        // 获取node在table中的index
+        int index = index(node.key);
         if (replacement == null){ // node是度为0的节点
             if (node.parent == null){// node是叶子节点并且是根节点
-                root = null;
+                table[index] = null;
                 // 当被删除的节点的所有指向都处理了在处理后序操作
                 // 此时的node还保留着parent指针
                 afterRemove(node, null);
@@ -191,7 +370,7 @@ public class TreeMap<K,V> implements Map<K,V>{
             replacement.parent = node.parent;
             // 更改parent的left、right的指向
             if (node.parent == null){ // node是度为1的节点并且是根节点
-                root = replacement;
+                table[index] = replacement;
             } else if (node == node.parent.left) {
                 node.parent.left = replacement;
             } else { // node == node.parent.right
@@ -204,95 +383,35 @@ public class TreeMap<K,V> implements Map<K,V>{
         return oldValue;
     }
 
-
-    /**
-     * 右旋
-     * @param grandNode 要旋转的node
+    /*
+     * 4阶B树和红黑树可以完美对应
+     * 添加红黑树节点一共有12中情况
+     * 一、有4中情况满足红黑树的性质4 :  parent为Black
+     *     a.同时满足4阶B树 b.不需要做额外处理
      *
-     *                  简略版对g进行右旋后示意图 具体看ppt
-     *              g                   p
-     *             /                 /    \
-     *            p      ------->   n      g
-     *           /
-     *          n
+     * 二、有8中情况不满足红黑树性质4 ： parent为Red 即出现连续的Red节点
+     *   1. 有4中情况属于B树不会上溢 ，判定条件 uncle 不是 Red
+     *     具体又分为 LL、RR 、RL、LR
      *
-     *     需要更改的指针
-     *     g.left = p.right
-     *     p.right = g;
-     *     等等。。。
+     *     LL、RR 修复红黑树性质4需要做的操作:
+     *          a. parent 染为 Black , grand 染为 Red
+     *          b. grand进行单次旋转 LL时右旋 RR时左旋
+     *
+     *     RL、LR 修复红黑树性质4需要做的操作:
+     *          a. 将自己染Black, grand染 Red
+     *          b. 进行双旋操作
+     *                  LR : parent左旋 , grand右旋
+     *                  RL : parent右旋 , grand左旋
+     *
+     *   2. 有4中情况属于B树上溢 ，判定条件 uncle 是 Red
+     *      具体的4中情况为 LL、RR、RL、LR
+     *      LL、RR、RL、LR修复红黑树性质4需要做的操作
+     *          a. 将 parent、uncle染为Black
+     *          b. grand向上合并: 将grand染Red，当做新添加的节点处理（递归操作）
+     *
+     *   经过以上步骤红黑树的添加操作结束
      */
-    private void rotateRight(Node<K,V> grandNode){
-        Node<K,V> parentNode = grandNode.left;
-        Node<K,V> childNode = parentNode.right;
-
-        /// 更改left、right指针
-        grandNode.left = childNode;
-        parentNode.right = grandNode;
-
-        afterRotate(grandNode,parentNode,childNode);
-    }
-
-    /**
-     * 左旋
-     * @param grandNode 要旋转的node
-     */
-    private void rotateLeft(Node<K,V> grandNode){
-        Node<K,V> parentNode = grandNode.right;
-        Node<K,V> childNode = parentNode.left;
-
-        // 更改 left、right指针
-        grandNode.right = parentNode.left;
-        parentNode.left = grandNode;
-
-        afterRotate(grandNode,parentNode,childNode);
-    }
-
-    private void afterRotate(Node<K,V> grandNode , Node<K,V> parentNode , Node<K,V> childNode){
-        if (grandNode.isRightChild()){
-            grandNode.parent.right = parentNode;
-        } else if (grandNode.isLeftChild()){
-            grandNode.parent.left = parentNode;
-        } else {
-            root = parentNode;
-        }
-
-        // 更改parent指针
-        if (childNode != null){
-            childNode.parent = grandNode;
-        }
-        parentNode.parent = grandNode.parent;
-        grandNode.parent = parentNode;
-    }
-
     private void afterPut(Node<K,V> node) {
-        /*
-         * 4阶B树和红黑树可以完美对应
-         * 添加红黑树节点一共有12中情况
-         * 一、有4中情况满足红黑树的性质4 :  parent为Black
-         *     a.同时满足4阶B树 b.不需要做额外处理
-         *
-         * 二、有8中情况不满足红黑树性质4 ： parent为Red 即出现连续的Red节点
-         *   1. 有4中情况属于B树不会上溢 ，判定条件 uncle 不是 Red
-         *     具体又分为 LL、RR 、RL、LR
-         *
-         *     LL、RR 修复红黑树性质4需要做的操作:
-         *          a. parent 染为 Black , grand 染为 Red
-         *          b. grand进行单次旋转 LL时右旋 RR时左旋
-         *
-         *     RL、LR 修复红黑树性质4需要做的操作:
-         *          a. 将自己染Black, grand染 Red
-         *          b. 进行双旋操作
-         *                  LR : parent左旋 , grand右旋
-         *                  RL : parent右旋 , grand左旋
-         *
-         *   2. 有4中情况属于B树上溢 ，判定条件 uncle 是 Red
-         *      具体的4中情况为 LL、RR、RL、LR
-         *      LL、RR、RL、LR修复红黑树性质4需要做的操作
-         *          a. 将 parent、uncle染为Black
-         *          b. grand向上合并: 将grand染Red，当做新添加的节点处理（递归操作）
-         *
-         *   经过以上步骤红黑树的添加操作结束
-         */
 
         Node<K,V> parent = node.parent;
 
@@ -347,7 +466,7 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     }
 
-    /**
+    /*
      * 删除节点后的调整
      * @param node 删除的节点
      * @param replacement 删除的节点的替代节点
@@ -396,6 +515,8 @@ public class TreeMap<K,V> implements Map<K,V>{
      *
      */
     private void afterRemove(Node<K,V> node, Node<K,V> replacement) {
+
+
         // 删除 ：真正被删除的节点都在叶子节点(B树的节点)
 
         // 一、如果删除的是Red, 直接删除即可
@@ -500,8 +621,64 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
 
+    /*
+     * 右旋
+     * @param grandNode 要旋转的node
+     *
+     *                  简略版对g进行右旋后示意图 具体看ppt
+     *              g                   p
+     *             /                 /    \
+     *            p      ------->   n      g
+     *           /
+     *          n
+     *
+     *     需要更改的指针
+     *     g.left = p.right
+     *     p.right = g;
+     *     等等。。。
+     */
+    protected void rotateRight(Node<K,V> grandNode){
 
-    /**
+        Node<K,V> parentNode = grandNode.left;
+        Node<K,V> childNode = parentNode.right;
+
+        /// 更改left、right指针
+        grandNode.left = childNode;
+        parentNode.right = grandNode;
+
+        afterRotate(grandNode,parentNode,childNode);
+    }
+
+    private void rotateLeft(Node<K,V> grandNode){
+        Node<K,V> parentNode = grandNode.right;
+        Node<K,V> childNode = parentNode.left;
+
+        // 更改 left、right指针
+        grandNode.right = parentNode.left;
+        parentNode.left = grandNode;
+
+        afterRotate(grandNode,parentNode,childNode);
+    }
+
+    private void afterRotate(Node<K,V> grandNode , Node<K,V> parentNode , Node<K,V> childNode){
+        if (grandNode.isRightChild()){
+            grandNode.parent.right = parentNode;
+        } else if (grandNode.isLeftChild()){
+            grandNode.parent.left = parentNode;
+        } else {
+            // grandNode是root节点
+            table[index(grandNode)] = parentNode;
+        }
+
+        // 更改parent指针
+        if (childNode != null){
+            childNode.parent = grandNode;
+        }
+        parentNode.parent = grandNode.parent;
+        grandNode.parent = parentNode;
+    }
+
+    /*
      * 查找前驱节点
      * 前驱节点: 中序遍历时的前一个节点
      * 步骤: 考虑到中序遍历的特点就可以思考出来 easy!!!
@@ -523,6 +700,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * @return node的前驱节点
      */
     private Node<K,V> predecessor(Node<K,V> node) {
+
         if (node == null) return null;
         // 前驱节点在左子树当中（left.right.right.right....）
         Node<K,V> p = node.left;
@@ -544,7 +722,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
 
-    /**
+    /*
      * 查找后驱节点
      * 后驱节点: 中序遍历时的后一个节点
      * 步骤：比较难想出来
@@ -585,55 +763,14 @@ public class TreeMap<K,V> implements Map<K,V>{
         return node.parent;
     }
 
-    /*
-     * 抽取的小函数
-     */
 
-    private Node<K,V> node(K key){
-        Node<K, V> node = root;
-        while (node != null) {
-            int cmp = compare(key, node.key);
-            if (cmp == 0) return node;
-            if (cmp > 0) {
-                node = node.right;
-            } else { // cmp < 0
-                node = node.left;
-            }
-        }
-        return null;
-    }
 
-    private int compare(K e1, K e2){
-        if (comparator != null){
-            /// 优先使用比较器
-            return comparator.compare(e1,e2);
-        } else {
-            /// 传入的对象必须是可比较的，这里强转
-            return ((Comparable<K>) e1).compareTo(e2);
-        }
-    }
+    /* ---------------------- 辅助函数 ----------------------*/
 
-    private Node<K,V> createNode(K key,V value,Node<K,V>  parent) {
+    private Node<K,V> createNode(K key, V value, Node<K,V> parent) {
         return new Node<>(key,value,parent);
     }
 
-    private void keyNotNullCheck(K key) {
-        if (key == null) {
-            throw new IllegalArgumentException("key must not be null");
-        }
-    }
-
-    private boolean valEquals(V v1, V v2) {
-//        return v1 == null ? v2 == null : v1.equals(v2);
-        return Objects.equals(v1, v2);
-    }
-
-
-
-
-    /*
-     * 辅助函数
-     */
     private boolean isRed(Node<K,V> node){
         return colorOfNode(node) == RED;
     }
@@ -647,7 +784,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
     private Node<K,V> black(Node<K,V> node){
-          return color(node,BLACK);
+        return color(node,BLACK);
     }
     private Node<K,V> red(Node<K,V> node){
         return color(node, RED);
@@ -658,7 +795,6 @@ public class TreeMap<K,V> implements Map<K,V>{
         return node;
     }
 
-
     /**
      * 内部节点类
      * @param <K>
@@ -667,6 +803,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     private static class Node<K,V>  {
         // 新创建节点默认为红色,这样可以满足红黑树的第 1、2、3、5性质 性质4不一定满足
         boolean color = RED;
+        int hash; // 该节点key的hash值
         K key;
         V value;
         public Node<K,V> parent;
@@ -677,6 +814,7 @@ public class TreeMap<K,V> implements Map<K,V>{
             this.key = key;
             this.value = value;
             this.parent = parent;
+            this.hash = key == null ? 0 : key.hashCode();
         }
 
         public boolean isLeaf(){
@@ -712,14 +850,9 @@ public class TreeMap<K,V> implements Map<K,V>{
             return null;
         }
 
-
-//        @Override
-//        public String toString() {
-//            String str = "";
-//            if (color == RED) {
-//                str = "R_";
-//            }
-//            return str + val.toString();
-//        }
+        @Override
+        public String toString() {
+            return "Node_" + key + "_" + value;
+        }
     }
 }

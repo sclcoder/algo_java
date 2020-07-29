@@ -471,7 +471,7 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     public Object string(Object node) {
         return node;
           // 测试BinarySearchTree时这么写
-//        BinaryTree.Node<E> newNode = (BinaryTree.Node<E>)node;
+//        Node<K,V> newNode = (Node<K,V>)node;
 //        String parentString = "null";
 //        if (newNode.parent != null){
 //            parentString = newNode.parent.val.toString();
