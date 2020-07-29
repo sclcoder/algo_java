@@ -1,4 +1,4 @@
-package com.ds_algo.k_hashTable;
+package com.ds_algo.k_hashTable.hashMap;
 
 import com.ds_algo.j_map.Map;
 import com.tool.binaryTree.printer.BinaryTreeInfo;
@@ -18,12 +18,12 @@ import java.util.Queue;
  * 3. 注意 对顺序没有要求
  */
 @SuppressWarnings({"unchecked","unused"})
-public class HashMapV0<K,V> implements Map<K,V>{
+public class HashMap_v0<K,V> implements Map<K,V>{
     private static final boolean RED = false;
     private static final boolean BLACK = true;
     private int size;
     private final Node<K,V>[] table;
-    public HashMapV0(){
+    public HashMap_v0(){
         // 容量设计为2^n 方便使用&与key的hashCode进行约束
         int DEFAULT_CAPACITY = 1 << 4;
         table = new Node[DEFAULT_CAPACITY];

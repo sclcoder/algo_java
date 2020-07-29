@@ -1,4 +1,4 @@
-package com.ds_algo.k_hashTable;
+package com.ds_algo.k_hashTable.hashMap;
 
 import com.ds_algo.j_map.Map;
 import com.ds_algo.j_map.TreeMap;
@@ -12,17 +12,17 @@ import com.tool.common.file.Files;
 
 public class TestHashMapMain {
     public static void main(String[] args) {
-        test1();
-		test2(new HashMap<>());
-		test3(new HashMap<>());
-		test4(new HashMap<>());
-		test5(new HashMap<>());
-
 //        test1();
-//        test2(new LinkedHashMap<>());
-//        test3(new LinkedHashMap<>());
-//        test4(new LinkedHashMap<>());
-//        test5(new LinkedHashMap<>());
+//		test2(new HashMap<>());
+//		test3(new HashMap<>());
+//		test4(new HashMap<>());
+//		test5(new HashMap<>());
+
+        test1();
+        test2(new LinkedHashMap<>());
+        test3(new LinkedHashMap<>());
+        test4(new LinkedHashMap<>());
+        test5(new LinkedHashMap<>());
 
 //        java.util.HashMap<String, String> map;
 //        java.util.LinkedHashMap<String, String> map2;
@@ -72,7 +72,7 @@ public class TestHashMapMain {
         for (int i = 1; i <= 20; i++) {
             map.put(new Key(i), i);
         }
-        map.print();
+//        map.print();
 
         for (int i = 5; i <= 7; i++) {
             map.put(new Key(i), i + 5);
