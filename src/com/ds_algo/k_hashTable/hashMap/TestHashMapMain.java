@@ -12,19 +12,19 @@ import com.tool.common.file.Files;
 
 public class TestHashMapMain {
     public static void main(String[] args) {
-//        test1();
-//		test2(new HashMap<>());
-//		test3(new HashMap<>());
-//		test4(new HashMap<>());
-//		test5(new HashMap<>());
-
         test1();
-        test2(new LinkedHashMap<>());
+
+		test2(new HashMap<>());
+		test3(new HashMap<>());
+		test4(new HashMap<>());
+		test5(new HashMap<>());
+
+		test2(new LinkedHashMap<>());
         test3(new LinkedHashMap<>());
         test4(new LinkedHashMap<>());
         test5(new LinkedHashMap<>());
 
-//        java.util.HashMap<String, String> map;
+        java.util.HashMap<String, String> map;
 //        java.util.LinkedHashMap<String, String> map2;
     }
 
@@ -41,20 +41,20 @@ public class TestHashMapMain {
                 }
                 System.out.println(map.size()); // 17188
 
-                int count = 0;
-                for (String word : words) {
-                    Integer i = map.get(word);
-                    count += i == null ? 0 : i;
-                    map.remove(word);
-                }
-                Asserts.test(count == words.length);
-                Asserts.test(map.size() == 0);
+//                int count = 0;
+//                for (String word : words) {
+//                    Integer i = map.get(word);
+//                    count += i == null ? 0 : i;
+//                    map.remove(word);
+//                }
+//                Asserts.test(count == words.length);
+//                Asserts.test(map.size() == 0);
             }
         });
     }
 
     static void test1() {
-        String filePath = "/Users/tiny/Desktop/java_src/java/util/concurrent";
+        String filePath = "/Users/tiny/Desktop/java_src/java/util";
         FileInfo fileInfo = Files.read(filePath, null);
         String[] words = fileInfo.words();
 
@@ -64,7 +64,7 @@ public class TestHashMapMain {
 
         test1Map(new TreeMap<>(), words);
         test1Map(new HashMap<>(), words);
-//        test1Map(new LinkedHashMap<>(), words);
+        test1Map(new LinkedHashMap<>(), words);
     }
 
 

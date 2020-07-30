@@ -8,8 +8,8 @@ import java.util.Comparator;
 @SuppressWarnings({"unused"})
 public class TestBSTMain {
     public static void main(String[] args) {
-//        test();
-        test7();
+        test();
+//        test7();
     }
 
     private static class PersonComparator implements Comparator<Person> {
@@ -36,23 +36,27 @@ public class TestBSTMain {
         System.out.println("tree height: " + bst.height());
         System.out.println("tree is Completed: " + bst.isCompletedBinaryTree());
 
-        //TODO: 由于包的问题 和 f_set/TreeSet存在问题，无法同时通过编译，这里先注释掉
-//        BinaryTree.Visitor visitor = new BinaryTree.Visitor<Integer>() {
-//            @Override
-//            boolean visit(Integer element) {
+        BinaryTree.Visitor visitor = new BinaryTree.Visitor<Integer>() {
+            @Override
+            protected boolean visit(Integer element) {
 //                if (element == 4){
 //                    return true;
 //                }
-//                System.out.print(element + " ");
-//                return false;
-//            }
-//        };
-//
-//        bst.inorderTravel(visitor);
-//        System.out.println();
-//        bst.preorderTravel(visitor);
-//        System.out.println();
-//        bst.postOrderTravel(visitor);
+                System.out.print(element + " ");
+                return false;
+            }
+        };
+        bst.preorderTravel(visitor);
+        System.out.println("前序:");
+
+        bst.inorderTravel(visitor);
+        System.out.println("中序:");
+
+        bst.postOrderTravel(visitor);
+        System.out.println("后序:");
+
+        bst.levelOrderTravel(visitor);
+        System.out.println("层次:");
     }
 
     static void test1() {
@@ -101,14 +105,13 @@ public class TestBSTMain {
         System.out.println("tree height: " + bst.height());
         System.out.println("tree is Completed: " + bst.isCompletedBinaryTree());
 
-        //TODO: 由于包的问题 和 f_set/TreeSet存在问题，无法同时通过编译，这里先注释掉
-//        bst.inorderTravel(new BinaryTree.Visitor<Integer>() {
-//            @Override
-//            boolean visit(Integer element) {
-//                System.out.print(element + "_");
-//                return false;
-//            }
-//        });
+        bst.inorderTravel(new BinaryTree.Visitor<Integer>() {
+            @Override
+            protected boolean visit(Integer element) {
+                System.out.print(element + "_");
+                return false;
+            }
+        });
     }
 
     static void test4() {

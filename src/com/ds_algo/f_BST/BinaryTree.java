@@ -14,7 +14,6 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     protected Node<E> root;
     protected int size;
 
-    /// 内部节点类
     public static class Node<E>{
         public E val;
         public Node<E> parent;
@@ -58,29 +57,23 @@ public class BinaryTree<E> implements BinaryTreeInfo {
             return null;
         }
     }
-
-    /// 访问器
     public static abstract class Visitor<E>{
         boolean stop;
         /**
          * @return 如果返回true，就代表停止遍历
          */
-        public abstract boolean visit(E element);
+        protected abstract boolean visit(E element);
     }
-
     public int size(){
         return size;
     }
-
     public void clear(){
         root = null;
         size = 0;
     }
-
     public boolean isEmpty() {
         return size == 0;
     }
-
     /**
      * 添加不同类型的Node<E>
      * @param parent 父节点
@@ -90,7 +83,6 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     protected Node<E> createNode(Node<E> parent, E element){
         return new Node<>(parent, element);
     }
-
     /**
      * 查找前驱节点
      * 前驱节点: 中序遍历时的前一个节点
@@ -122,17 +114,14 @@ public class BinaryTree<E> implements BinaryTreeInfo {
             }
             return p;
         }
-
         // 从父节点、祖父节点中寻找前驱节点
         while (node.parent != null &&  node.parent.left == node){
             node = node.parent;
         }
-
         // node.parent == null
         // node == node.parent.right
         return node.parent;
     }
-
 
     /**
      * 查找后驱节点
@@ -165,7 +154,6 @@ public class BinaryTree<E> implements BinaryTreeInfo {
             }
             return p;
         }
-
         // 从父节点、祖父节点中寻找前驱节点
         while (node.parent != null && node.parent.right == node){
             node = node.parent;
@@ -182,7 +170,9 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     public void preorderTravel(Visitor<E> visitor){
         if (visitor == null) return;
 //        preorder_recursive(root ,visitor);
-        preorder_iterate(root,visitor);
+//        preorder_iterate(root,visitor);
+        preorder_iterate2(root,visitor);
+//        preorder_iterate_universal(root,visitor);
     }
 
     /**
@@ -215,11 +205,7 @@ public class BinaryTree<E> implements BinaryTreeInfo {
     }
 
 
-    /**
-     * 前序遍历递归版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
+    /*前序遍历递归版*/
     private void preorder_recursive(Node<E> root, Visitor<E> visitor){
         if (root == null || visitor.stop) return;
         visitor.stop = visitor.visit(root.val);
@@ -227,39 +213,61 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         preorder_recursive(root.right, visitor);
     }
 
-    /**
-     * 前序遍历迭代版
-     * @param root 根节点
+    /*
+     * 前、中、后序遍历迭代: 写好这迭代其实也不难，就是要看看节点的先后访问顺序，根据顺序设计入栈方式
+     *
+     * 前、从简单的树思考: 先向左访问所有子树的根节点(最终的根节点时上级树的左节点)，然后访问其右节点
+     *  这样来看,就很明显了,右节点时倒序访问的，即每次访问一棵子树时将其右节点入栈
+     *
+     * 中、
+     *
+     * 后、
      */
-    private void preorder_iterate(Node<E> root, Visitor<E> visitor){
+
+    private void preorder_iterate(Node<E> root, Visitor<E> visitor) {
         if (root == null || visitor == null) return;
-        // 一统江湖的写法
         Stack<Node<E>> stack = new Stack<>();
-        stack.push(root);
-        while (!stack.isEmpty()){
-            Node<E> top = stack.pop();
-            if (top != null){
-                if (top.right != null){
-                    stack.push(top.right);
+        Node<E> cur = root;
+        while (true){
+            if (cur != null){
+                // 访问node节点
+                visitor.visit(cur.val);
+                // 将右子节点入栈
+                if (cur.right != null){
+                    stack.push(cur.right);
                 }
-                if (top.left != null){
-                    stack.push(top.left);
-                }
-                stack.push(top);
-                stack.push(null);
+                // 向左走
+                cur = cur.left;
+            } else if (stack.isEmpty()){
+                return;
             } else {
-                if (visitor.visit(stack.pop().val)) return;
+                // 处理右边
+                cur = stack.pop();
             }
         }
+    }
 
+    private void preorder_iterate2(Node<E> root, Visitor<E> visitor) {
+        if (root == null || visitor == null) return;
+        Stack<Node<E>> stack = new Stack<>();
+        /// 将节点入栈再出栈：和一统江湖的写法思路一样了
+        Node<E> cur = root;
+        stack.push(cur);
+        while (!stack.isEmpty()){
+            cur = stack.pop();
+            if (visitor.visit(cur.val)) return;
+            if (cur.right != null){
+                stack.push(cur.right);
+            }
+            if (cur.left != null){
+                stack.push(cur.left);
+            }
+        }
     }
 
 
-    /**
-     * 中序遍历递归版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
+
+    /*中序遍历递归版*/
     private void inorder_recursive(Node<E> root,Visitor<E> visitor){
         if (root == null || visitor.stop) return;
         inorder_recursive(root.left,visitor);
@@ -268,39 +276,24 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         inorder_recursive(root.right,visitor);
     }
 
-    /**
-     * 中序遍历迭代版
-     * @param root 根节点
-     */
     private void inorder_iterate(Node<E> root, Visitor<E> visitor){
         if (root == null || visitor == null) return;
-        // 一统江湖的写法
         Stack<Node<E>> stack = new Stack<>();
-        stack.push(root);
-        while (!stack.isEmpty()){
-            Node<E> top = stack.pop();
-            if (top != null){
-                if (top.right != null){
-                    stack.push(top.right);
-                }
-                stack.push(top);
-                stack.push(null);
-
-                if (top.left != null){
-                    stack.push(top.left);
-                }
-
+        Node<E> cur = root;
+        while (true){
+            if (cur != null){
+                stack.push(cur);
+                cur = cur.left;
+            } else if (!stack.isEmpty()){
+                cur = stack.pop();
+                visitor.visit(cur.val);
+                cur = cur.right;
             } else {
-                if (visitor.visit(stack.pop().val)) return;
+                return;
             }
         }
     }
-
-    /**
-     * 后序遍历递归版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
+        /*后序遍历递归版*/
     private void postOrder_recursive(Node<E> root, Visitor<E> visitor){
         if (root == null || visitor.stop) return;
         postOrder_recursive(root.left, visitor);
@@ -309,38 +302,31 @@ public class BinaryTree<E> implements BinaryTreeInfo {
         visitor.stop = visitor.visit(root.val);
     }
 
-    /**
-     * 后序遍历迭代版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
     private void postOrder_iterate(Node<E> root, Visitor<E> visitor){
-        if (root == null || visitor == null) return;
-        // 一统江湖的写法
+        if (visitor == null || root == null) return;
+        // 记录上一次弹出访问的节点
+        Node<E> prev = null;
         Stack<Node<E>> stack = new Stack<>();
         stack.push(root);
-        while (!stack.isEmpty()){
-            Node<E> top = stack.pop();
-            if (top != null){
-                stack.push(top);
-                stack.push(null);
-                if (top.right != null){
+        while (!stack.isEmpty()) {
+            Node<E> top = stack.peek();
+            if (top.isLeaf() || (prev != null && prev.parent == top)) {
+                prev = stack.pop();
+                // 访问节点
+                if (visitor.visit(prev.val)) return;
+            } else {
+                if (top.right != null) {
                     stack.push(top.right);
                 }
-                if (top.left != null){
+                if (top.left != null) {
                     stack.push(top.left);
                 }
-            } else {
-                if (visitor.visit(stack.pop().val)) return;
             }
         }
     }
 
-    /**
-     * 层次遍历迭代版
-     * @param root 根节点
-     * @param visitor 遍历器
-     */
+
+        /*层次遍历迭代版*/
     public void levelOrder(Node<E> root, Visitor<E> visitor){
         if (root == null || visitor == null) return;
         Queue<Node<E>> queue = new LinkedList<>();
@@ -353,6 +339,72 @@ public class BinaryTree<E> implements BinaryTreeInfo {
             }
             if (node.right != null){
                 queue.add(node.right);
+            }
+        }
+    }
+
+    // 一统江湖的写法
+    private void preorder_iterate_universal(Node<E> root, Visitor<E> visitor){
+        if (root == null || visitor == null) return;
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()){
+            Node<E> top = stack.pop();
+            if (top != null){
+                if (top.right != null){
+                    stack.push(top.right);
+                }
+                if (top.left != null){
+                    stack.push(top.left);
+                }
+                stack.push(top);
+                stack.push(null);
+            } else {
+                if (visitor.visit(stack.pop().val)) return;
+            }
+        }
+    }
+
+    private void inorder_iterate_universal(Node<E> root, Visitor<E> visitor){
+        if (root == null || visitor == null) return;
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()){
+            Node<E> top = stack.pop();
+            if (top != null){
+                if (top.right != null){
+                    stack.push(top.right);
+                }
+                stack.push(top);
+                stack.push(null);
+
+                if (top.left != null){
+                    stack.push(top.left);
+                }
+
+            } else {
+                if (visitor.visit(stack.pop().val)) return;
+            }
+        }
+    }
+
+    private void postOrder_iterate_universal(Node<E> root, Visitor<E> visitor){
+        if (root == null || visitor == null) return;
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()){
+            Node<E> top = stack.pop();
+            if (top != null){
+                stack.push(top);
+                stack.push(null);
+                if (top.right != null){
+                    stack.push(top.right);
+                }
+                if (top.left != null){
+                    stack.push(top.left);
+                }
+            } else {
+                if (visitor.visit(stack.pop().val)) return;
             }
         }
     }
@@ -469,13 +521,13 @@ public class BinaryTree<E> implements BinaryTreeInfo {
 
     @Override
     public Object string(Object node) {
-        return node;
+//        return node;
           // 测试BinarySearchTree时这么写
-//        Node<K,V> newNode = (Node<K,V>)node;
-//        String parentString = "null";
-//        if (newNode.parent != null){
-//            parentString = newNode.parent.val.toString();
-//        }
-//        return ((Node<E>)node).val + "(p_" + parentString + ")";
+        Node<E> newNode = (Node<E>)node;
+        String parentString = "null";
+        if (newNode.parent != null){
+            parentString = newNode.parent.val.toString();
+        }
+        return ((Node<E>)node).val + "(p_" + parentString + ")";
     }
 }

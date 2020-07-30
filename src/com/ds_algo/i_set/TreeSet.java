@@ -50,7 +50,7 @@ public class TreeSet<E> implements Set<E>{
     public void traversal(Visitor<E> visitor) {
         rbTree.inorderTravel(new BinaryTree.Visitor<E>() {
             @Override
-            public boolean visit(E element) {
+            protected boolean visit(E element) {
               return visitor.visit(element);
             }
         });
