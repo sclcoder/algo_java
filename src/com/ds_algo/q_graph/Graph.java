@@ -25,5 +25,18 @@ public interface Graph<V, E> {
     void addEdge(V fromV, V toV ,E weight);
     void removeEdge(V fromV, V toV);
 
-
+    /*
+     * 广度优先搜索
+     */
+    void bfs(V begin, VertexVisitor<V> visitor);
+    /*
+     * 深度优先搜索
+     */
+    void dfs(V begin, VertexVisitor<V> visitor);
+    /*
+     * 遍历接口
+     */
+    interface VertexVisitor<V>{
+        boolean visit(V v);
+    }
 }

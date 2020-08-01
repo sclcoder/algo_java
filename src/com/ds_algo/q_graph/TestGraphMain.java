@@ -3,9 +3,63 @@ package com.ds_algo.q_graph;
 public class TestGraphMain {
 
     public static void main(String[] args) {
-        test();
+//        test();
+//        testBfs();
+        testDfs();
     }
 
+
+    static void testDfs() {
+
+        Graph<Object, Double> graph1 = undirectedGraph(Data.DFS_01);
+        graph1.dfs(1, (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+        System.out.println("无向图DFS");
+
+
+        Graph<Object, Double> graph2 = directedGraph(Data.DFS_02);
+        graph2.dfs("a", (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+        System.out.println("有向图DFS");
+
+    }
+
+    static void testBfs() {
+        Graph<Object, Double> graph1 = undirectedGraph(Data.BFS_01);
+        graph1.bfs("A", (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+        System.out.println("无向图BFS");
+
+
+        Graph<Object, Double> graph2 = directedGraph(Data.BFS_02);
+        graph2.bfs(0, (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+
+        System.out.println("有向图BFS");
+
+        Graph<Object, Double> graph3 = undirectedGraph(Data.BFS_03);
+        graph3.bfs(0, (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+        System.out.println("无向图BFS");
+
+        Graph<Object, Double> graph4 = directedGraph(Data.BFS_04);
+        graph4.bfs(5, (Object v) -> {
+            System.out.print(v + " ");
+            return false;
+        });
+        System.out.println("有向图BFS");
+
+    }
 
     static void test() {
 		ListGraph<String, Integer> graph = new ListGraph<>();
@@ -39,7 +93,6 @@ public class TestGraphMain {
 		graph.removeVertex("V0");
 
 		graph.print();
-
 
     }
 
