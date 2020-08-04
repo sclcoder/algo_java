@@ -1,14 +1,134 @@
 package com.ds_algo.q_graph;
 
+import com.ds_algo.l_heap.MinHeap;
+import com.ds_algo.p_unionFind.UnionFindGeneric;
+
 import java.util.*;
 
-public class ListGraph<V,E> implements Graph<V,E>{
+public class ListGraph<V,E> extends Graph<V, E> {
+    public ListGraph() {}
+
+    public ListGraph(WeightManager<E> weightManager) {
+        super(weightManager);
+    }
 
     private final Map<V,Vertex<V,E>> vertices = new HashMap();  // 存放所有的顶点: 以V为key, Vertex为Value
     private final Set<Edge<V,E>> edges = new HashSet<>();  // 存放所有的边: Edge
 
+    // 权重比较器
+    private Comparator<Edge<V,E>> edgeComparator = new Comparator<Edge<V, E>>() {
+        @Override
+        public int compare(Edge<V, E> e1, Edge<V, E> e2) {
+            return weightManager.compare(e1.weight,e2.weight);
+        }
+    };
 
-    /* ---------------- 进阶功能函数 ----------------*/
+
+    /* ---------------- 进阶功能函数之最短路径 ----------------*/
+
+
+
+    /* ---------------- 进阶功能函数之最小生成树 ----------------*/
+
+    @Override
+    public Set<EdgeInfo<V, E>> mst() {
+        if (Math.random() < 0.5){
+            return prim();
+        } else {
+            return kruskal();
+        }
+    }
+
+    /* 最小生成树之prim算法
+     * 假设G={V,E}是有权的连通图(无向-无向能覆盖有向的情况)，A是G中最小生成树的边集
+     * 算法从S={u} {u属于V集合}, A={}开始，重复执行一下操作，直到S = V为止
+     * --找到切分C = {S, V-S}的最小横切边(u,v)并入集合A，同时将v并入集合S
+     *
+     */
+    private Set<EdgeInfo<V,E>> prim(){
+        Iterator<Vertex<V,E>> iterator = vertices.values().iterator();
+        if (iterator.next() == null) return null;
+        Vertex<V,E> vertex = iterator.next();
+        Set<Vertex<V,E>> addedVertices = new HashSet<>();
+        addedVertices.add(vertex);
+        Set<EdgeInfo<V,E>> edgeInfos = new HashSet<>();
+        MinHeap<Edge<V,E>> heap = new MinHeap<>(vertex.outEdges, edgeComparator);
+        while (!heap.isEmpty() && addedVertices.size() < vertices.size()){
+            Edge<V,E> edge = heap.remove();
+            if (addedVertices.contains(edge.toVertex)) continue;
+            addedVertices.add(edge.toVertex);
+            edgeInfos.add(edge.info());
+            heap.addAll(edge.toVertex.outEdges);
+        }
+        return edgeInfos;
+    }
+
+    /* 最小生成树之kruskal算法
+     * 按照边的权重从小到大到添加到生成树中，直到生成树中有V-1条边
+     * 1.若加入的边的会和生成树边形成环，则不加入该边
+     *   可利用并查集这种结构解决新加入的边会不会和生成树形成环的情况:
+     *   -- 将所有的顶点独立成单独的集合
+     *   -- 若新加入的边fromVertex和toVertex属于同一个集合,说明添加这条边会使生成树形成环
+     * 2.从添加第3条边开始，可能使生成树形成环
+     *
+     */
+    private Set<EdgeInfo<V,E>> kruskal(){
+        if (vertices.size() <= 0) return null;
+        Set<EdgeInfo<V,E>> edgeInfos = new HashSet<>();
+        MinHeap<Edge<V,E>> heap = new MinHeap<>(edges, edgeComparator);
+        UnionFindGeneric uf = new UnionFindGeneric();
+        for (Vertex<V,E> vertex : vertices.values()) {
+            uf.makeSet(vertex); // 将每个顶点都初始化为单独的集合
+        }
+        while (!heap.isEmpty() && edgeInfos.size() < vertices.size() - 1){
+            Edge<V,E> edge = heap.remove();
+            if (uf.isSame(edge.fromVertex,edge.toVertex)) continue;
+            edgeInfos.add(edge.info());
+            uf.union(edge.fromVertex,edge.toVertex);
+        }
+        return edgeInfos;
+    }
+
+    /* ---------------- 进阶功能函数之AOV网络的拓扑排序 ----------------*/
+    @Override
+    public List<V> topologySort() {
+        /* 拓扑排序之kahn算法
+         * 假设L是存放拓扑排序的结果的列表
+         * 1.将所有入度为0的Vertex放入L中，然后将该Vertex从图中删除
+         * 2.重复1的操作，直到找不到入度为0的Vertex
+         * 注意： 如果L中的Vertex数量和AOV网中的Vertex数量相等，说明拓扑排序完成
+         *       如果L中的Vertex数量少于AOV网中的Vertex数量，说明AOV中存在环，无法完成拓扑排序
+         * 在实现拓扑排序时，为了不破坏AOV的结构，需要变通一下再处理
+         */
+
+        List<V> list = new ArrayList<>();
+        Map<Vertex<V,E> , Integer> inDegree = new HashMap<>(); // Vertex和其入度映射
+        Queue<Vertex<V,E>> queue = new LinkedList<>(); // 存放入度为0的Vertex
+        vertices.forEach((V v ,Vertex<V,E> vertex) -> {
+            int count = vertex.inEdges.size();
+            if (count == 0){
+                queue.add(vertex);
+            } else {
+                inDegree.put(vertex,count);
+            }
+        });
+
+        while (!queue.isEmpty()){
+            Vertex<V,E> vertex = queue.poll();
+            list.add(vertex.value);
+            vertex.outEdges.forEach((Edge<V,E> edge)->{
+                int inCount = inDegree.get(edge.toVertex) - 1;
+                if (inCount == 0){
+                    queue.add(edge.toVertex);
+                } else {
+                    inDegree.put(edge.toVertex,inCount);
+                }
+            });
+        }
+        return list;
+    }
+
+    /* ---------------- 进阶功能函数之遍历 ---------------- */
 
     @Override
     public void bfs(V begin, VertexVisitor<V> visitor) {
@@ -38,14 +158,19 @@ public class ListGraph<V,E> implements Graph<V,E>{
     public void dfs(V begin, VertexVisitor<V> visitor) {
         if (visitor == null) return;
         Set<V> visitedVertex = new HashSet<>(); // 记录被访问过的vertex.value
-//        dfsRecurse(begin,visitor,visitedVertex);
-//        dfsIterate(begin,visitor,visitedVertex);
-//        dfsIterate2(begin,visitor,visitedVertex);
-          dfsIterate3(begin,visitor,visitedVertex);
-
+        double random = Math.random();
+        if (random < 0.25){
+            dfsRecurse(begin,visitor,visitedVertex);
+        } else if (random < 0.5){
+            dfsIterate(begin,visitor,visitedVertex);
+        } else if (random < 0.75){
+            dfsIterate2(begin,visitor,visitedVertex);
+        } else {
+            dfsIterate3(begin,visitor,visitedVertex);
+        }
     }
     // 深度优先搜索 : 递归
-    public void dfsRecurse(V v, VertexVisitor<V> visitor, Set<V> visitedVertex){
+    private void dfsRecurse(V v, VertexVisitor<V> visitor, Set<V> visitedVertex){
         Vertex<V,E> vertex = vertices.get(v);
         if (vertex == null) return;
         visitedVertex.add(vertex.value);
@@ -60,7 +185,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
 
     // TODO: 深入思考吧！
     // 深度优先搜索 : 迭代之一统江湖法
-    public void dfsIterate(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
+    private void dfsIterate(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
         Vertex<V,E> vertex = vertices.get(v);
         if (vertex == null) return;
 
@@ -89,7 +214,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
     }
 
     // 一统江湖法的具体化
-    public void dfsIterate2(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
+    private void dfsIterate2(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
         Vertex<V,E> vertex = vertices.get(v);
         if (vertex == null) return;
 
@@ -111,7 +236,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
     }
 
     // 非一统江湖法之MJ: 我没看懂
-    public void dfsIterate3(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
+    private void dfsIterate3(V v, VertexVisitor<V> visitor,Set<V> visitedVertex){
         Vertex<V,E> vertex = vertices.get(v);
         if (vertex == null) return;
         Stack<Vertex<V,E>> stack = new Stack<>();
@@ -126,14 +251,13 @@ public class ListGraph<V,E> implements Graph<V,E>{
             for (Edge<V, E> edge : top.outEdges) {
 
                 if (!visitedVertex.contains(edge.toVertex.value)){
-                    stack.push(edge.formVertex);
+                    stack.push(edge.fromVertex);
                     stack.push(edge.toVertex);
                     visitedVertex.add(edge.toVertex.value);
                     if (visitor.visit(edge.toVertex.value)) return;
-
                     break; // 跳出一次for循环,进入下一次循环
                 }
-            };
+            }
         }
     }
 
@@ -171,7 +295,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
             edges.remove(edge);
         });
         vertex.inEdges.forEach((Edge<V, E> edge) -> {
-            edge.formVertex.outEdges.remove(edge);
+            edge.fromVertex.outEdges.remove(edge);
             // vertex.inEdges.remove(edge);
             edges.remove(edge);
         });
@@ -224,6 +348,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
 
 
 
+
     /* ---------------- 内部类 ------------------*/
 
     /*
@@ -232,7 +357,7 @@ public class ListGraph<V,E> implements Graph<V,E>{
      * 2. 进入的边、出去的边: 边的数量不可控，且不需要顺序和重复，考虑使用Set保存
      * 外部调用使用的V, 内部保存的是Vertex
      */
-    public class Vertex<V,E>{
+    private class Vertex<V,E>{
         V value;
         Set<Edge<V,E>> inEdges = new HashSet<>();
         Set<Edge<V,E>> outEdges = new HashSet<>();
@@ -257,19 +382,23 @@ public class ListGraph<V,E> implements Graph<V,E>{
         }
     }
 
-    public class Edge<V, E>{
-        Vertex<V,E> formVertex;
+    private class Edge<V, E> {
+        Vertex<V,E> fromVertex;
         Vertex<V,E> toVertex;
         E weight;
 
-        public Edge(Vertex<V,E> formVertex, Vertex<V,E> toVertex, E weight) {
-            this.formVertex = formVertex;
+        public EdgeInfo<V,E> info(){
+            return new EdgeInfo<>(fromVertex.value,toVertex.value,weight);
+        }
+
+        public Edge(Vertex<V,E> fromVertex, Vertex<V,E> toVertex, E weight) {
+            this.fromVertex = fromVertex;
             this.toVertex = toVertex;
             this.weight = weight;
         }
 
-        public Edge(Vertex<V,E> formVertex, Vertex<V,E> toVertex) {
-            this.formVertex = formVertex;
+        public Edge(Vertex<V,E> fromVertex, Vertex<V,E> toVertex) {
+            this.fromVertex = fromVertex;
             this.toVertex = toVertex;
         }
 
@@ -277,18 +406,18 @@ public class ListGraph<V,E> implements Graph<V,E>{
         public boolean equals(Object obj) {
             Edge<V,E> edge = (Edge<V,E>) obj;
             // weight不参与hash，只要from和to是相同的就认为是同一条边
-            return Objects.equals(formVertex,edge.formVertex) && Objects.equals(toVertex,edge.toVertex);
+            return Objects.equals(fromVertex,edge.fromVertex) && Objects.equals(toVertex,edge.toVertex);
         }
 
         @Override
         public int hashCode() {
-            return formVertex.hashCode() * 31 + toVertex.hashCode();
+            return fromVertex.hashCode() * 31 + toVertex.hashCode();
         }
 
         @Override
         public String toString() {
             return "Edge[" +
-                    "formVertex=" + formVertex +
+                    "fromVertex=" + fromVertex +
                     ", toVertex=" + toVertex +
                     ", weight=" + (weight == null ? "null" : weight)+
                     ']';
