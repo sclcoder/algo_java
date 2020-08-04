@@ -2,8 +2,10 @@ package com.ds_algo.q_graph;
 
 import com.ds_algo.q_graph.Graph.EdgeInfo;
 import com.ds_algo.q_graph.Graph.WeightManager;
+import com.ds_algo.q_graph.Graph.PathInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TestGraphMain {
@@ -28,8 +30,33 @@ public class TestGraphMain {
 //        testBfs();
 //        testDfs();
 //        testTopo();
-        testMst();
+//        testMst();
+//        testSp();
+        testMultiSp();
     }
+
+    static void testMultiSp() {
+        Graph<Object, Double> graph = directedGraph2(Data.NEGATIVE_WEIGHT1);
+        Map<Object, Map<Object, PathInfo<Object, Double>>> sp = graph.shortestPath();
+        sp.forEach((Object from, Map<Object, PathInfo<Object, Double>> paths) -> {
+            System.out.println(from + "---------------------");
+            paths.forEach((Object to, PathInfo<Object, Double> path) -> {
+                System.out.println(to + " - " + path);
+            });
+        });
+    }
+
+
+    static void testSp() {
+        Graph<Object, Double> graph = undirectedGraph2(Data.SP);
+        Map<Object, PathInfo<Object, Double>> sp = graph.shortestPath("A");
+        if (sp == null) return;
+        sp.forEach((Object v, PathInfo<Object, Double> path) -> {
+            System.out.println(v + " - " + path);
+        });
+    }
+
+
     static void testMst() {
         Graph<Object, Double> graph = undirectedGraph2(Data.MST_01);
         Set<EdgeInfo<Object, Double>> infos = graph.mst();

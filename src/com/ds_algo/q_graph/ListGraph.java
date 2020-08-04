@@ -4,6 +4,7 @@ import com.ds_algo.l_heap.MinHeap;
 import com.ds_algo.p_unionFind.UnionFindGeneric;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class ListGraph<V,E> extends Graph<V, E> {
     public ListGraph() {}
@@ -25,6 +26,306 @@ public class ListGraph<V,E> extends Graph<V, E> {
 
 
     /* ---------------- 进阶功能函数之最短路径 ----------------*/
+
+    /**
+     * Floyd算法: 属于多源最短路径算法，可以求出任意两个顶点的最短路径，支持负权边
+     * 时间复杂度O(V^3),效率比执行V的Dijkstra算法好
+     * 算法原理:
+     *  从任意顶点i到顶点j的最短路径无外乎两种可能
+     *      1.直接从i到j
+     *      2.从i经过若干个顶点到j
+     *  假设dist(i,j)为顶点i到顶点j的最短路径的距离
+     *  对于每个顶点k，检查dist(i,k) + dist(k,j) < dist(i,j)是否成立
+     *      1.如果成立，证明从i经过k到达j的路径比从i直接到j短，设置dist(i,j) = dist(i,k) + dist(k,j)
+     *      2.当遍历完所有的节点k,dist(i,j)记录就是i到j的最短路径的距离
+     *    Map<V, Map<V, PathInfo<V, E>>>
+     *        V:起点
+     *        Map<V : 终点
+     */
+    public Map<V, Map<V, PathInfo<V, E>>> shortestPath() {
+        Map<V, Map<V, PathInfo<V, E>>> paths = new HashMap<>();
+        // 初始化
+        for (Edge<V, E> edge : edges) {
+            Map<V, PathInfo<V, E>> map = paths.get(edge.fromVertex.value);
+            if (map == null) {
+                map = new HashMap<>();
+                paths.put(edge.fromVertex.value, map);
+            }
+
+            PathInfo<V, E> pathInfo = new PathInfo<>(edge.weight);
+            pathInfo.edgeInfos.add(edge.info());
+            map.put(edge.toVertex.value, pathInfo);
+        }
+
+        vertices.forEach((V v2, Vertex<V, E> vertex2) -> {
+            vertices.forEach((V v1, Vertex<V, E> vertex1) -> {
+                vertices.forEach((V v3, Vertex<V, E> vertex3) -> {
+                    if (v1.equals(v2) || v2.equals(v3) || v1.equals(v3)) return;
+
+                    // v1 -> v2 : v1起点 v2终点
+                    PathInfo<V, E> path12 = getPathInfo(v1, v2, paths);
+                    if (path12 == null) return;
+
+                    // v2 -> v3
+                    PathInfo<V, E> path23 = getPathInfo(v2, v3, paths);
+                    if (path23 == null) return;
+
+                    // v1 -> v3
+                    PathInfo<V, E> path13 = getPathInfo(v1, v3, paths);
+
+                    E newWeight = weightManager.add(path12.weight, path23.weight);
+                    if (path13 != null && weightManager.compare(newWeight, path13.weight) >= 0) return;
+
+                    if (path13 == null) {
+                        path13 = new PathInfo<V, E>();
+                        paths.get(v1).put(v3, path13);
+                    } else {
+                        path13.edgeInfos.clear();
+                    }
+
+                    path13.weight = newWeight;
+                    path13.edgeInfos.addAll(path12.edgeInfos);
+                    path13.edgeInfos.addAll(path23.edgeInfos);
+                });
+            });
+        });
+
+        return paths;
+    }
+
+
+    private PathInfo<V, E> getPathInfo(V from, V to, Map<V, Map<V, PathInfo<V, E>>> paths) {
+        Map<V, PathInfo<V, E>> map = paths.get(from);
+        return map == null ? null : map.get(to);
+    }
+
+    /**
+     * 获取源点到其他顶点的最短路径权重信息
+     * @param begin 源点
+     * @return 包含源点到其他顶点的最短路径的权重映射
+     */
+    @Override
+    public Map<V, PathInfo<V,E>> shortestPath(V begin) {
+//        return Dijkstra(begin);
+        return bellmanFord(begin);
+    }
+
+    /**
+     *
+     * 携带最短路径的权重和路径版本
+     * @param begin 源点
+     * @return 包含到V顶点的最短路径信息: 路径 + 权重
+     *
+     * BellmanFord算法 : 单源最短路径算法，支持负权边，能检测出负权环
+     * 原理: 对所有的边进行V-1次松弛操作(V是节点数量)，得到所有可能的最短路径
+     * 时间复杂度：O(EV)， E是边的数量，V是顶点数量
+     */
+    private Map<V, PathInfo<V, E>> bellmanFord(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
+        selectedPaths.put(begin, new PathInfo<>(weightManager.zero()));
+
+        int count = vertices.size() - 1;
+        for (int i = 0; i < count; i++) { // v - 1 次
+            for (Edge<V, E> edge : edges) {
+                PathInfo<V, E> fromPath = selectedPaths.get(edge.fromVertex.value);
+                if (fromPath == null) continue;
+                relax(edge, fromPath, selectedPaths);
+            }
+        }
+
+        for (Edge<V, E> edge : edges) {
+            PathInfo<V, E> fromPath = selectedPaths.get(edge.fromVertex.value);
+            if (fromPath == null) continue;
+            if (relax(edge, fromPath, selectedPaths)) {
+                System.out.println("有负权环");
+                return null;
+            }
+        }
+
+        selectedPaths.remove(begin);
+        return selectedPaths;
+    }
+
+
+    /**
+     * 松弛
+     * @param edge 需要进行松弛的边
+     * @param fromPath edge的from的最短路径信息
+     * @param paths 存放着其他点（对于dijkstra来说，就是还没有离开桌面的点）的最短路径信息
+     */
+    private boolean relax(Edge<V, E> edge, PathInfo<V, E> fromPath, Map<V, PathInfo<V, E>> paths) {
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        E newWeight = weightManager.add(fromPath.weight, edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        PathInfo<V, E> oldPath = paths.get(edge.toVertex.value);
+        if (oldPath != null && weightManager.compare(newWeight, oldPath.weight) >= 0) return false;
+
+        if (oldPath == null) {
+            oldPath = new PathInfo<>();
+            paths.put(edge.toVertex.value, oldPath);
+        } else {
+            oldPath.edgeInfos.clear();
+        }
+
+        oldPath.weight = newWeight;
+        oldPath.edgeInfos.addAll(fromPath.edgeInfos);
+        oldPath.edgeInfos.add(edge.info());
+
+        return true;
+    }
+
+
+
+    /**
+     * Dijkstra算法
+     * 携带最短路径的权重和路径版本
+     * @param begin 源点
+     * @return 包含到V顶点的最短路径信息: 路径 + 权重
+     */
+    private Map<V,PathInfo<V,E>> Dijkstra(V begin){
+
+        Vertex<V,E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V,PathInfo<V,E>> shortestPath = new HashMap<>();
+        Map<Vertex<V,E>,PathInfo<V,E>> paths = new HashMap<>();
+        // 松弛
+        paths.put(beginVertex, new PathInfo<>(weightManager.zero()));
+
+        // 初始化paths
+//        for (Edge<V,E> edge : beginVertex.outEdges) {
+//            PathInfo<V,E> pathInfo  = new PathInfo<>(edge.weight);
+//            pathInfo.getEdgeInfos().add(edge.info());
+//            paths.put(edge.toVertex, pathInfo);
+//        }
+
+        while (!paths.isEmpty()){
+            Entry<Vertex<V,E>, PathInfo<V,E>> minEntry = getMinPath(paths);
+            Vertex<V,E> minVertex = minEntry.getKey();
+            PathInfo<V,E> minPath = minEntry.getValue();
+            // vertex离开桌面
+            shortestPath.put(minVertex.value, minPath);
+            // 不需要再找该顶点的最短路径了
+            paths.remove(minVertex);
+
+            // 对它的minVertex的outEdges进行松弛操作
+            for (Edge<V,E> edge : minVertex.outEdges) {
+                // 如果edge.to已经离开桌面，就没必要进行松弛操作
+                if (shortestPath.containsKey(edge.toVertex.value)) continue;
+                // 松弛edge
+                relaxForDijkstra(edge, minPath, paths);
+            }
+        }
+
+        shortestPath.remove(begin);
+        return shortestPath;
+    }
+
+    /**
+     * 松弛
+     * @param edge 需要进行松弛的边
+     * @param minPath edge的from的最短路径信息
+     * @param paths 存放着其他点（对于dijkstra来说，就是还没有离开桌面的点）的最短路径信息
+     */
+    private void relaxForDijkstra(Edge<V,E> edge, PathInfo<V,E> minPath, Map<Vertex<V,E>, PathInfo<V,E>> paths){
+
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        E newWeight = weightManager.add(minPath.getWeight(), edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        PathInfo<V,E> oldPath = paths.get(edge.toVertex);
+        if (oldPath != null && weightManager.compare(newWeight,oldPath.getWeight()) >= 0) return;
+
+        if (oldPath == null){
+            oldPath = new PathInfo<>();
+            paths.put(edge.toVertex, oldPath);
+        } else {
+            // oldPath != null 且 newWeight更小
+            oldPath.edgeInfos.clear(); // 之前的路径作废
+        }
+
+        oldPath.weight = newWeight;
+        oldPath.edgeInfos.addAll(minPath.edgeInfos);
+        oldPath.edgeInfos.add(edge.info());
+    }
+
+
+    /*
+     *  查找权重最小的PathInfo
+     */
+    private Entry<Vertex<V,E>, PathInfo<V,E>> getMinPath(Map<Vertex<V,E>, PathInfo<V,E>> paths){
+         Iterator<Entry<Vertex<V,E>, PathInfo<V,E>>> iterator = paths.entrySet().iterator();
+         Entry<Vertex<V,E>, PathInfo<V,E>> minEntry = iterator.next();
+         if (iterator.hasNext()){
+             Entry<Vertex<V,E>, PathInfo<V,E>> entry = iterator.next();
+             if (weightManager.compare(entry.getValue().getWeight(), minEntry.getValue().getWeight()) < 0){
+                 minEntry = entry;
+             }
+         }
+        return minEntry;
+    }
+
+    /*
+     *  迪杰斯特拉算法: 使用前提为不能有负权边
+     *  松弛操作: 更新两个顶点之间的最短路径
+     *  --此处指更新源点到另外一个顶点的最短路径
+     *  --松弛的意义: 尝试找出更短的路径
+     *
+     *  算法本身很简单，妈的为什么我写了那么久。。。
+     *  仅仅携带权重信息版本
+     */
+    private Map<V,E> Dijkstra1(V begin){
+        Vertex<V,E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+        Map<V,E> shortestPath = new HashMap<>();
+        // 记录源点到所有的顶点的路径信息
+        Map<Vertex<V,E>, E> paths = new HashMap<>();
+        for (Edge<V,E> edge : beginVertex.outEdges) {
+            paths.put(edge.toVertex, edge.weight);
+        }
+
+        while (!paths.isEmpty()) {
+            Entry<Vertex<V, E>, E> minEntry = getMinEdge1(paths);
+            // vertex离开桌面
+            Vertex<V,E> vertex = minEntry.getKey();
+            // 记录源点到该顶点的最短路径值
+            shortestPath.put(vertex.value,minEntry.getValue());
+            // 找到了到该顶点的最短路径, 将该条信息从paths中删除
+            paths.remove(vertex);
+
+            for (Edge<V,E> edge : vertex.outEdges) {
+                // 如果edge.to已经离开桌面，就没必要进行松弛操作
+                if (shortestPath.containsKey(edge.toVertex.value)) continue;
+                // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+                E newWeight = weightManager.add(minEntry.getValue(), edge.weight);
+				// 以前的最短路径：beginVertex到edge.to的最短路径
+				E oldWeight = paths.get(edge.toVertex);
+				if (oldWeight == null || weightManager.compare(newWeight,oldWeight) < 0){
+                    paths.put(edge.toVertex, newWeight);
+                }
+            }
+        }
+        // 因为一开始shortestPath中并没有源点到源点的最短路径,在循环时,就可能通过其他顶点回到源点，导致添加到shortestPath中出错，因为源点到源点的最短路径应该是0(泛型)
+        shortestPath.remove(begin);
+        return shortestPath;
+    }
+
+    /*
+     *  查找权重最短的边:配合Dijkstra1版本
+     */
+    private Entry<Vertex<V,E>, E> getMinEdge1(Map<Vertex<V,E>, E> paths){
+        Iterator<Entry<Vertex<V,E> ,E>> iterator = paths.entrySet().iterator();
+        Entry<Vertex<V,E>, E> minEntry = iterator.next();
+        while (iterator.hasNext()){
+            Entry<Vertex<V,E>, E> nextEntry = iterator.next();
+            if (weightManager.compare(nextEntry.getValue(),minEntry.getValue()) < 0){
+                minEntry = nextEntry;
+            }
+        }
+        return minEntry;
+    }
 
 
 

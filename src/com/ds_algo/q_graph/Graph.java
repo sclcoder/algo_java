@@ -1,7 +1,6 @@
 package com.ds_algo.q_graph;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Vertex: 顶点
@@ -18,10 +17,24 @@ import java.util.Set;
  */
 public abstract class Graph<V, E> {
     protected WeightManager<E> weightManager;
-
     public Graph() {}
     public Graph(WeightManager<E> weightManager) {
         this.weightManager = weightManager;
+    }
+    /*
+     * 遍历接口
+     */
+    interface VertexVisitor<V>{
+        boolean visit(V v);
+    }
+
+    /*
+     *  权重管理者接口: 因为权重是泛型E，具体的比较、相加、zero的处理交给外界
+     */
+    public interface WeightManager<E> {
+        int compare(E w1, E w2);
+        E add(E w1, E w2);
+        E zero();
     }
 
     public abstract int verticesSize();
@@ -42,21 +55,7 @@ public abstract class Graph<V, E> {
      * 深度优先搜索
      */
     public abstract void dfs(V begin, VertexVisitor<V> visitor);
-    /*
-     * 遍历接口
-     */
-    interface VertexVisitor<V>{
-        boolean visit(V v);
-    }
 
-    /*
-     *  权重管理者接口: 因为权重是泛型E，具体的比较、相加、zero的处理交给外界
-     */
-    public interface WeightManager<E> {
-        int compare(E w1, E w2);
-        E add(E w1, E w2);
-        E zero();
-    }
 
     /*
      * 拓扑排序
@@ -91,7 +90,61 @@ public abstract class Graph<V, E> {
      */
     public abstract Set<EdgeInfo<V,E>> mst();
 
+    /*
+     * 最短路径:
+     *   两个顶点之间权重最小的路径（有向、无向均适用，但不能有负权环，可以有负权边）
+     *
+     * 单源最短路径算法:
+     * Dijkstra: 不能有负权边
+     * Bellman-ford：可以有负权边
+     *
+     * 多源最短路径算法:可以有负权边
+     * Floyd
+     *
+     */
+
+    public abstract Map<V,PathInfo<V,E>> shortestPath(V begin);
+
+    // 多源最短路径算法
+    public abstract Map<V, Map<V, PathInfo<V, E>>> shortestPath();
+
     /* ---------------- 暴露给外界的信息类 ------------------*/
+
+    /*
+     * PathInfo<V,E> 为获取最短路径信息设置的类
+     */
+    public static class PathInfo<V,E>{
+        protected  E weight;
+        protected  List<EdgeInfo<V,E>> edgeInfos = new LinkedList<>();
+        public PathInfo(){};
+        public PathInfo(E weight) {
+            this.weight = weight;
+        }
+
+        public E getWeight() {
+            return weight;
+        }
+
+        public void setWeight(E weight) {
+            this.weight = weight;
+        }
+
+        public List<EdgeInfo<V, E>> getEdgeInfos() {
+            return edgeInfos;
+        }
+
+        public void setEdgeInfos(List<EdgeInfo<V, E>> edgeInfos) {
+            edgeInfos = edgeInfos;
+        }
+
+        @Override
+        public String toString() {
+            return "PathInfo{" +
+                    "weight=" + weight +
+                    ", edgeInfos=" + edgeInfos +
+                    '}';
+        }
+    }
 
     /*
      * 不想让外界知道内部使用的类 Edge<V, E> Vertex<V,E>等信息，因为这些结构是自己内部具体实现,而且实现方案可能会改变
